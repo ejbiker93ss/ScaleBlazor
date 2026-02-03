@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ScaleBlazor/Client/ScaleBlazor.Client.csproj" />
+  <Project Path="ScaleBlazor/Server/ScaleBlazor.Server.csproj" />
+  <Project Path="ScaleBlazor/Shared/ScaleBlazor.Shared.csproj" />
+</Solution>

@@ -1,0 +1,163 @@
+@page "/settings"
+@using ScaleBlazor.Shared
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<div class="scale-system">
+    <div class="settings-page">
+        <div class="settings-header">
+            <h1 class="title">Settings</h1>
+            <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
+                <span>← Back</span>
+            </button>
+        </div>
+
+        @if (settings == null)
+        {
+            <div class="loading">Loading settings...</div>
+        }
+        else
+        {
+            <div class="settings-content">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">📦</span>
+                        <span>Pallet Configuration</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <label class="setting-label">Readings Per Pallet</label>
+                            <input type="number" 
+                                   class="setting-input" 
+                                   @bind="settings.ReadingsPerPallet" 
+                                   min="1" 
+                                   max="100" />
+                            <small class="setting-help">Number of weight readings required per pallet</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">🤖</span>
+                        <span>Auto-Capture Configuration</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox" @bind="settings.AutoCaptureEnabled" />
+                                <span>Enable Auto-Capture</span>
+                            </label>
+                            <small class="setting-help">Automatically capture weight when readings are stable</small>
+                        </div>
+
+                        @if (settings.AutoCaptureEnabled)
+                        {
+                            <div class="setting-item">
+                                <label class="setting-label">Stability Threshold (%)</label>
+                                <div class="input-with-unit">
+                                    <input type="number" 
+                                           class="setting-input" 
+                                           @bind="settings.AutoCaptureThresholdPercent" 
+                                           min="0.1" 
+                                           max="10" 
+                                           step="0.1" />
+                                    <span class="unit">%</span>
+                                </div>
+                                <small class="setting-help">
+                                    Auto-capture when current weight is within this percentage of the last 10 readings
+                                </small>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
+                        @if (isSaving)
+                        {
+                            <span>Saving...</span>
+                        }
+                        else
+                        {
+                            <span>💾 Save Settings</span>
+                        }
+                    </button>
+
+                    @if (saveMessage != null)
+                    {
+                        <div class="save-message @(saveSuccess ? "success" : "error")">
+                            @saveMessage
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private AppSettings? settings;
+    private bool isSaving;
+    private string? saveMessage;
+    private bool saveSuccess;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSettings();
+    }
+
+    private async Task LoadSettings()
+    {
+        try
+        {
+            settings = await Http.GetFromJsonAsync<AppSettings>("api/settings");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading settings: {ex.Message}");
+            saveMessage = $"Error loading settings: {ex.Message}";
+            saveSuccess = false;
+        }
+    }
+
+    private async Task SaveSettings()
+    {
+        if (settings == null) return;
+
+        isSaving = true;
+        saveMessage = null;
+        
+        try
+        {
+            var response = await Http.PutAsJsonAsync("api/settings", settings);
+            if (response.IsSuccessStatusCode)
+            {
+                saveMessage = "Settings saved successfully!";
+                saveSuccess = true;
+                await Task.Delay(2000);
+                saveMessage = null;
+            }
+            else
+            {
+                saveMessage = "Failed to save settings";
+                saveSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving settings: {ex.Message}");
+            saveMessage = $"Error: {ex.Message}";
+            saveSuccess = false;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

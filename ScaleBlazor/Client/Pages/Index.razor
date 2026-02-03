@@ -1,0 +1,211 @@
+﻿@page "/"
+@using ScaleBlazor.Shared
+@using ScaleBlazor.Client.Services
+@inject HttpClient Http
+@inject JSInterop JSInterop
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<div class="scale-system">
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">⚖️</span>
+                <span>Live Reading</span>
+                <div class="header-buttons">
+                    <button class="btn-icon-inline" @onclick="@(() => Navigation.NavigateTo("/reports"))" title="Reports & Analytics">
+                        <span class="icon-text">📊</span>
+                    </button>
+                    <button class="btn-icon-inline" @onclick="@(() => Navigation.NavigateTo("/settings"))" title="Settings">
+                        <span class="icon-text">⚙️</span>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="live-reading">@currentWeight.ToString("F2")</div>
+                <div class="unit">Lbs</div>
+                <div class="timestamp">@currentTimestamp</div>
+                <button class="btn-primary" @onclick="CaptureReading">Capture Reading</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">🕐</span>
+                <span>Last 10 Readings</span>
+            </div>
+            <div class="card-body">
+                <div class="readings-list">
+                    @foreach (var reading in lastReadings)
+                    {
+                        <div class="reading-item">
+                            <span class="weight">@reading.Weight.ToString("F2") lbs</span>
+                            <span class="time">@reading.Timestamp.ToString("h:mm:ss tt")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">📦</span>
+                <span>Last 10 Pallets</span>
+            </div>
+            <div class="card-body">
+                <div class="pallet-info">
+                    <span>Current Pallet</span>
+                    <span class="pallet-id">@(activePallet?.PalletId ?? "N/A")</span>
+                    <span class="reading-count">@(activePallet?.ReadingCount ?? 0) readings</span>
+                </div>
+                <button class="btn-secondary" @onclick="CompletePallet">✓ Complete Pallet</button>
+                <div class="pallets-list">
+                    @foreach (var pallet in pallets)
+                    {
+                        <div class="pallet-item">
+                            <span class="pallet-name">@pallet.PalletId</span>
+                            <span class="pallet-readings">@pallet.ReadingCount readings</span>
+                            <span class="pallet-weight">@pallet.TotalWeight.ToString("F2") lbs</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">📊</span>
+                <span>Last 10 Days - Daily Average</span>
+            </div>
+            <div class="card-body">
+                <canvas id="dailyChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline-card">
+        <div class="card-header">
+            <span class="icon">📈</span>
+            <span>Today's Weight Timeline</span>
+        </div>
+        <div class="card-body">
+            <canvas id="timelineChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@code {
+    private double currentWeight = 0;
+    private string currentTimestamp = "";
+    private List<ScaleReading> lastReadings = new();
+    private List<Pallet> pallets = new();
+    private Pallet? activePallet;
+    private List<ScaleReading> todayReadings = new();
+    private List<DailyAverage> dailyAverages = new();
+    private Timer? updateTimer;
+    private int readingsPerPallet = 10;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSettings();
+        await LoadData();
+        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromSeconds(2));
+    }
+
+    private async Task LoadSettings()
+    {
+        try
+        {
+            var settings = await Http.GetFromJsonAsync<AppSettings>("api/settings");
+            if (settings != null)
+            {
+                readingsPerPallet = settings.ReadingsPerPallet;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading settings: {ex.Message}");
+        }
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            lastReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings?count=10") ?? new();
+            pallets = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=10") ?? new();
+            activePallet = await Http.GetFromJsonAsync<Pallet?>("api/pallets/active");
+            todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
+            dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=10") ?? new();
+
+            await InvokeAsync(StateHasChanged);
+            await UpdateCharts();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateLiveReading()
+    {
+        try
+        {
+            var reading = await Http.GetFromJsonAsync<ScaleReading>("api/scale/current");
+            if (reading != null)
+            {
+                currentWeight = reading.Weight;
+                currentTimestamp = reading.Timestamp.ToString("h:mm:ss tt");
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating live reading: {ex.Message}");
+        }
+    }
+
+    private async Task CaptureReading()
+    {
+        try
+        {
+            await Http.PostAsync("api/scale/capture", null);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error capturing reading: {ex.Message}");
+        }
+    }
+
+    private async Task CompletePallet()
+    {
+        try
+        {
+            await Http.PostAsync("api/pallets/complete", null);
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error completing pallet: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateCharts()
+    {
+        try
+        {
+            await JSInterop.UpdateDailyChart(dailyAverages);
+            await JSInterop.UpdateTimelineChart(todayReadings);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating charts: {ex.Message}");
+        }
+    }
+
+    public void Dispose()
+    {
+        updateTimer?.Dispose();
+    }
+}

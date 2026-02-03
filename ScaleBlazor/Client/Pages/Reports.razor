@@ -1,0 +1,412 @@
+@page "/reports"
+@using ScaleBlazor.Shared
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
+<div class="scale-system">
+    <div class="reports-page">
+        <div class="reports-header">
+            <h1 class="title">Analytics & Reports</h1>
+            <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
+                <span>← Back</span>
+            </button>
+        </div>
+
+        <div class="reports-tabs">
+            <button class="tab-btn @(activeTab == "overview" ? "active" : "")" @onclick="@(() => SetActiveTab("overview"))">
+                📊 Overview
+            </button>
+            <button class="tab-btn @(activeTab == "trends" ? "active" : "")" @onclick="@(() => SetActiveTab("trends"))">
+                📈 Trends
+            </button>
+            <button class="tab-btn @(activeTab == "pallets" ? "active" : "")" @onclick="@(() => SetActiveTab("pallets"))">
+                📦 Pallet Stats
+            </button>
+            <button class="tab-btn @(activeTab == "export" ? "active" : "")" @onclick="@(() => SetActiveTab("export"))">
+                💾 Export Data
+            </button>
+        </div>
+
+        <div class="reports-content">
+            @if (activeTab == "overview")
+            {
+                <div class="overview-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">⚖️</div>
+                            <div class="stat-value">@totalReadings</div>
+                            <div class="stat-label">Total Readings</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value">@totalPallets</div>
+                            <div class="stat-label">Total Pallets</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-value">@averageWeight.ToString("F2")</div>
+                            <div class="stat-label">Avg Weight (lbs)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-value">@todayReadings</div>
+                            <div class="stat-label">Today's Readings</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">📊</span>
+                            <span>Average Weight Trends</span>
+                            <div class="header-buttons">
+                                <select class="view-selector" @bind="averageViewType" @bind:after="UpdateOverviewChart">
+                                    <option value="daily">Daily Average</option>
+                                    <option value="weekly">Weekly Average</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="averageWeightChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "trends")
+            {
+                <div class="trends-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">📈</span>
+                            <span>Weight Trends Over Time</span>
+                            <div class="header-buttons">
+                                <label class="date-label">From:</label>
+                                <input type="date" 
+                                       class="date-input" 
+                                       @bind="trendsStartDate" 
+                                       @bind:after="UpdateTrendsChart"
+                                       max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(30))">30d</button>
+                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(90))">90d</button>
+                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(180))">6m</button>
+                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(365))">1y</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">📊</span>
+                            <span>Hourly Average - Today</span>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="hourlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "pallets")
+            {
+                <div class="pallets-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">📦</span>
+                            <span>Pallet Statistics</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="pallet-stats-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Pallet ID</th>
+                                            <th>Readings</th>
+                                            <th>Total Weight</th>
+                                            <th>Avg Weight</th>
+                                            <th>Created</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var pallet in palletStats)
+                                        {
+                                            <tr>
+                                                <td class="pallet-id-cell">@pallet.PalletId</td>
+                                                <td>@pallet.ReadingCount</td>
+                                                <td>@pallet.TotalWeight.ToString("F2") lbs</td>
+                                                <td>@((pallet.TotalWeight / Math.Max(pallet.ReadingCount, 1)).ToString("F2")) lbs</td>
+                                                <td>@pallet.CreatedAt.ToString("MM/dd/yyyy")</td>
+                                                <td>
+                                                    <span class="status-badge @(pallet.IsCompleted ? "completed" : "active")">
+                                                        @(pallet.IsCompleted ? "Completed" : "Active")
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "export")
+            {
+                <div class="export-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">💾</span>
+                            <span>Export Data to CSV</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="export-form">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <input type="date" class="form-input" @bind="startDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="date" class="form-input" @bind="endDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Export Type</label>
+                                    <select class="form-input" @bind="exportType">
+                                        <option value="readings">Scale Readings</option>
+                                        <option value="pallets">Pallet Data</option>
+                                        <option value="all">All Data</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn-primary" @onclick="ExportData" disabled="@isExporting">
+                                    @if (isExporting)
+                                    {
+                                        <span>Exporting...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>📥 Download CSV</span>
+                                    }
+                                </button>
+
+                                @if (exportMessage != null)
+                                {
+                                    <div class="export-message @(exportSuccess ? "success" : "error")">
+                                        @exportMessage
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="icon">ℹ️</span>
+                            <span>Export Information</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-section">
+                                <h3>What's included:</h3>
+                                <ul>
+                                    <li><strong>Scale Readings:</strong> Weight, Timestamp, Pallet ID</li>
+                                    <li><strong>Pallet Data:</strong> Pallet ID, Reading Count, Total Weight, Created Date, Status</li>
+                                    <li><strong>All Data:</strong> Complete dataset including both readings and pallet information</li>
+                                </ul>
+                                <p class="info-note">Note: Date range applies to the timestamp of the records.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string activeTab = "overview";
+    private string averageViewType = "daily";
+    private DateTime trendsStartDate = DateTime.Now.AddDays(-30);
+    private List<AverageData> trendsData = new();
+    private int totalReadings = 0;
+    private int totalPallets = 0;
+    private double averageWeight = 0;
+    private int todayReadings = 0;
+    private List<Pallet> palletStats = new();
+    private List<AverageData> averageData = new();
+
+    private DateTime startDate = DateTime.Now.AddDays(-30);
+    private DateTime endDate = DateTime.Now;
+    private string exportType = "readings";
+    private bool isExporting = false;
+    private string? exportMessage;
+    private bool exportSuccess;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStatistics();
+        await LoadAverageData();
+        await LoadTrendsData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdateCharts();
+        }
+    }
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+        StateHasChanged();
+        if (tab == "overview")
+        {
+            _ = UpdateCharts();
+        }
+        else if (tab == "trends")
+        {
+            _ = UpdateTrendsChart();
+        }
+    }
+
+    private async Task SetTrendsPreset(int days)
+    {
+        trendsStartDate = DateTime.Now.AddDays(-days);
+        await UpdateTrendsChart();
+    }
+
+    private async Task LoadStatistics()
+    {
+        try
+        {
+            var stats = await Http.GetFromJsonAsync<ReportStatistics>("api/reports/statistics");
+            if (stats != null)
+            {
+                totalReadings = stats.TotalReadings;
+                totalPallets = stats.TotalPallets;
+                averageWeight = stats.AverageWeight;
+                todayReadings = stats.TodayReadings;
+            }
+
+            palletStats = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=50") ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading statistics: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAverageData()
+    {
+        try
+        {
+            var url = averageViewType == "weekly" 
+                ? "api/reports/average-weekly?weeks=12" 
+                : "api/reports/average-daily?days=30";
+
+            averageData = await Http.GetFromJsonAsync<List<AverageData>>(url) ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading average data: {ex.Message}");
+        }
+    }
+
+    private async Task LoadTrendsData()
+    {
+        try
+        {
+            var daysDiff = (int)(DateTime.Now - trendsStartDate).TotalDays;
+            var url = $"api/reports/trends-daily?days={daysDiff}";
+            trendsData = await Http.GetFromJsonAsync<List<AverageData>>(url) ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading trends data: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateOverviewChart()
+    {
+        await LoadAverageData();
+        await JSRuntime.InvokeVoidAsync("renderAverageWeightChart", averageData, averageViewType);
+    }
+
+    private async Task UpdateTrendsChart()
+    {
+        await LoadTrendsData();
+        await JSRuntime.InvokeVoidAsync("renderTrendsChart", trendsData);
+        await JSRuntime.InvokeVoidAsync("renderHourlyChart");
+    }
+
+    private async Task UpdateCharts()
+    {
+        try
+        {
+            if (activeTab == "overview")
+            {
+                await JSRuntime.InvokeVoidAsync("renderAverageWeightChart", averageData, averageViewType);
+            }
+            else if (activeTab == "trends")
+            {
+                await JSRuntime.InvokeVoidAsync("renderTrendsChart", trendsData);
+                await JSRuntime.InvokeVoidAsync("renderHourlyChart");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating charts: {ex.Message}");
+        }
+    }
+
+    private async Task ExportData()
+    {
+        isExporting = true;
+        exportMessage = null;
+
+        try
+        {
+            var url = $"api/reports/export?type={exportType}&startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}";
+            await JSRuntime.InvokeVoidAsync("downloadFile", url, $"scale-data-{exportType}-{DateTime.Now:yyyyMMdd}.csv");
+            
+            exportMessage = "Export completed successfully!";
+            exportSuccess = true;
+            await Task.Delay(3000);
+            exportMessage = null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exporting data: {ex.Message}");
+            exportMessage = $"Export failed: {ex.Message}";
+            exportSuccess = false;
+        }
+        finally
+        {
+            isExporting = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    public class ReportStatistics
+    {
+        public int TotalReadings { get; set; }
+        public int TotalPallets { get; set; }
+        public double AverageWeight { get; set; }
+        public int TodayReadings { get; set; }
+    }
+
+    public class AverageData
+    {
+        public string Label { get; set; } = "";
+        public double AverageWeight { get; set; }
+        public DateTime Date { get; set; }
+    }
+}
