@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using ScaleBlazor.Server.Data;
+using ScaleBlazor.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<ScaleDbContext>(options =>
     options.UseSqlite("Data Source=scale.db"));
+
+// Register Scale Reader Service as Singleton
+builder.Services.AddSingleton<ScaleReaderService>();
 
 builder.Services.AddCors(options =>
 {
@@ -98,6 +102,22 @@ using (var scope = app.Services.CreateScope())
             AutoCaptureThresholdPercent = 1.0
         });
         db.SaveChanges();
+    }
+}
+
+// Start the scale reader service if enabled
+var scaleEnabled = app.Configuration.GetValue<bool>("Scale:Enabled", false);
+if (scaleEnabled)
+{
+    var scaleService = app.Services.GetRequiredService<ScaleReaderService>();
+    try
+    {
+        scaleService.Start();
+        app.Logger.LogInformation("Scale reader service started successfully");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex, "Failed to start scale reader service. Running in simulation mode.");
     }
 }
 

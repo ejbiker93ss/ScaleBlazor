@@ -22,6 +22,22 @@
                 </div>
             </div>
             <div class="card-body">
+                @if (scaleStatus != null)
+                {
+                    <div class="scale-status @(scaleStatus.IsConnected ? "connected" : "disconnected")">
+                        <span class="status-dot"></span>
+                        <span class="status-text">
+                            @if (scaleStatus.IsEnabled)
+                            {
+                                @(scaleStatus.IsConnected ? $"Scale Connected ({scaleStatus.PortName})" : "Scale Disconnected - Simulation Mode")
+                            }
+                            else
+                            {
+                                <text>Simulation Mode</text>
+                            }
+                        </span>
+                    </div>
+                }
                 <div class="live-reading">@currentWeight.ToString("F2")</div>
                 <div class="unit">Lbs</div>
                 <div class="timestamp">@currentTimestamp</div>
@@ -97,6 +113,7 @@
 @code {
     private double currentWeight = 0;
     private string currentTimestamp = "";
+    private ScaleStatus? scaleStatus;
     private List<ScaleReading> lastReadings = new();
     private List<Pallet> pallets = new();
     private Pallet? activePallet;
@@ -108,6 +125,7 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadSettings();
+        await LoadScaleStatus();
         await LoadData();
         updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromSeconds(2));
     }
@@ -125,6 +143,18 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading settings: {ex.Message}");
+        }
+    }
+
+    private async Task LoadScaleStatus()
+    {
+        try
+        {
+            scaleStatus = await Http.GetFromJsonAsync<ScaleStatus>("api/scale/status");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading scale status: {ex.Message}");
         }
     }
 
@@ -207,5 +237,13 @@
     public void Dispose()
     {
         updateTimer?.Dispose();
+    }
+
+    public class ScaleStatus
+    {
+        public bool IsConnected { get; set; }
+        public bool IsEnabled { get; set; }
+        public string PortName { get; set; } = "";
+        public double CurrentWeight { get; set; }
     }
 }

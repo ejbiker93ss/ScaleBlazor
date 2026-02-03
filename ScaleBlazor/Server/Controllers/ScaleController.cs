@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScaleBlazor.Server.Data;
+using ScaleBlazor.Server.Services;
 using ScaleBlazor.Shared;
 
 namespace ScaleBlazor.Server.Controllers;
@@ -10,29 +11,51 @@ namespace ScaleBlazor.Server.Controllers;
 public class ScaleController : ControllerBase
 {
     private readonly ScaleDbContext _context;
+    private readonly ScaleReaderService _scaleService;
+    private readonly IConfiguration _configuration;
     private static readonly Random _random = new();
 
-    public ScaleController(ScaleDbContext context)
+    public ScaleController(ScaleDbContext context, ScaleReaderService scaleService, IConfiguration configuration)
     {
         _context = context;
+        _scaleService = scaleService;
+        _configuration = configuration;
     }
 
     [HttpGet("current")]
-    public async Task<ActionResult<ScaleReading>> GetCurrentReading()
+    public ActionResult<ScaleReading> GetCurrentReading()
     {
-        var reading = await _context.ScaleReadings
-            .OrderByDescending(r => r.Timestamp)
-            .FirstOrDefaultAsync();
+        var scaleEnabled = _configuration.GetValue<bool>("Scale:Enabled", false);
 
-        if (reading == null)
+        var reading = new ScaleReading
         {
-            var newReading = GenerateReading();
-            _context.ScaleReadings.Add(newReading);
-            await _context.SaveChangesAsync();
-            return newReading;
-        }
+            Weight = scaleEnabled && _scaleService.IsConnected 
+                ? _scaleService.CurrentWeight 
+                : GenerateSimulatedWeight(),
+            Timestamp = DateTime.Now
+        };
 
         return reading;
+    }
+
+    [HttpGet("status")]
+    public ActionResult<ScaleStatus> GetScaleStatus()
+    {
+        var scaleEnabled = _configuration.GetValue<bool>("Scale:Enabled", false);
+
+        return new ScaleStatus
+        {
+            IsConnected = _scaleService.IsConnected,
+            IsEnabled = scaleEnabled,
+            PortName = _configuration["Scale:PortName"] ?? "COM3",
+            CurrentWeight = _scaleService.CurrentWeight
+        };
+    }
+
+    [HttpGet("ports")]
+    public ActionResult<List<string>> GetAvailablePorts()
+    {
+        return _scaleService.GetAvailablePorts();
     }
 
     [HttpGet("readings")]
@@ -77,6 +100,7 @@ public class ScaleController : ControllerBase
     [HttpPost("capture")]
     public async Task<ActionResult<ScaleReading>> CaptureReading()
     {
+        var scaleEnabled = _configuration.GetValue<bool>("Scale:Enabled", false);
         var settings = await _context.Settings.FirstOrDefaultAsync();
         var readingsPerPallet = settings?.ReadingsPerPallet ?? 10;
 
@@ -85,7 +109,14 @@ public class ScaleController : ControllerBase
             .OrderByDescending(p => p.CreatedAt)
             .FirstOrDefaultAsync();
 
-        var reading = GenerateReading();
+        // Get current weight from scale or generate simulated
+        var reading = new ScaleReading
+        {
+            Weight = scaleEnabled && _scaleService.IsConnected 
+                ? _scaleService.CurrentWeight 
+                : GenerateSimulatedWeight(),
+            Timestamp = DateTime.Now
+        };
 
         if (activePallet != null)
         {
@@ -123,12 +154,16 @@ public class ScaleController : ControllerBase
         return reading;
     }
 
-    private ScaleReading GenerateReading()
+    private double GenerateSimulatedWeight()
     {
-        return new ScaleReading
-        {
-            Weight = Math.Round(45.0 + (_random.NextDouble() * 1.5 - 0.75), 2),
-            Timestamp = DateTime.Now
-        };
+        return Math.Round(45.0 + (_random.NextDouble() * 1.5 - 0.75), 2);
     }
+}
+
+public class ScaleStatus
+{
+    public bool IsConnected { get; set; }
+    public bool IsEnabled { get; set; }
+    public string PortName { get; set; } = "";
+    public double CurrentWeight { get; set; }
 }

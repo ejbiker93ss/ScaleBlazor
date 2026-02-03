@@ -71,6 +71,52 @@ body {
     margin: 10px 0;
 }
 
+.scale-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.scale-status.connected {
+    background: #d4edda;
+    color: #155724;
+}
+
+.scale-status.disconnected {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.scale-status.connected .status-dot {
+    background: #28a745;
+}
+
+.scale-status.disconnected .status-dot {
+    background: #ffc107;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
 .unit {
     font-size: 1.2rem;
     color: #666;
