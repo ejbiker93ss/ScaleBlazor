@@ -1,9 +1,15 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.IO;
 using ScaleBlazor.Server.Data;
+using ScaleBlazor.Server.Logging;
 using ScaleBlazor.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddFile(Path.Combine(builder.Environment.ContentRootPath, "Logs", "scale.log"));
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -25,6 +31,23 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+
+        if (exception != null)
+        {
+            logger.LogError(exception, "Unhandled server exception");
+        }
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsJsonAsync(new { error = "An unexpected server error occurred." });
+    });
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -53,15 +76,11 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ScaleDbContext>();
     
-    // In development, delete and recreate the database to ensure schema is up to date
-    if (app.Environment.IsDevelopment())
-    {
-        db.Database.EnsureDeleted();
-    }
-    
     db.Database.EnsureCreated();
 
-    if (!db.Pallets.Any())
+    ApplyPendingSchemaUpdates(db);
+
+    if (app.Environment.IsDevelopment() && !db.Pallets.Any())
     {
         var random = new Random();
 
@@ -99,9 +118,42 @@ using (var scope = app.Services.CreateScope())
         {
             ReadingsPerPallet = 10,
             AutoCaptureEnabled = false,
-            AutoCaptureThresholdPercent = 1.0
+            AutoCaptureThresholdPercent = 1.0,
+            ScalePortName = app.Configuration["Scale:PortName"]
         });
         db.SaveChanges();
+    }
+}
+
+static void ApplyPendingSchemaUpdates(ScaleDbContext db)
+{
+    using var connection = db.Database.GetDbConnection();
+    if (connection.State != ConnectionState.Open)
+    {
+        connection.Open();
+    }
+
+    using var command = connection.CreateCommand();
+    command.CommandText = "PRAGMA table_info('Settings');";
+
+    var hasScalePortName = false;
+    using (var reader = command.ExecuteReader())
+    {
+        while (reader.Read())
+        {
+            var columnName = reader.GetString(1);
+            if (string.Equals(columnName, "ScalePortName", StringComparison.OrdinalIgnoreCase))
+            {
+                hasScalePortName = true;
+                break;
+            }
+        }
+    }
+
+    if (!hasScalePortName)
+    {
+        command.CommandText = "ALTER TABLE Settings ADD COLUMN ScalePortName TEXT";
+        command.ExecuteNonQuery();
     }
 }
 
@@ -113,11 +165,10 @@ if (scaleEnabled)
     try
     {
         scaleService.Start();
-        app.Logger.LogInformation("Scale reader service started successfully");
     }
-    catch (Exception ex)
+    catch (Exception)
     {
-        app.Logger.LogWarning(ex, "Failed to start scale reader service. Running in simulation mode.");
+        // Running in simulation mode when start fails.
     }
 }
 

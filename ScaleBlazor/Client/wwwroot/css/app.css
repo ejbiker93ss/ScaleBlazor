@@ -26,7 +26,7 @@ body {
 
 .cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: ww;
     gap: 20px;
     margin-bottom: 20px;
 }
@@ -37,6 +37,22 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: transform 0.2s;
+}
+
+.card.flash-success {
+    outline: 8px solid #28a745;
+    outline-offset: -8px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    animation: flash-border 0.7s ease-out;
+}
+
+@keyframes flash-border {
+    0% {
+        outline-color: #28a745;
+    }
+    100% {
+        outline-color: rgba(40,167,69,0);
+    }
 }
 
 .card:hover {
@@ -53,6 +69,43 @@ body {
     gap: 10px;
     font-weight: 600;
     color: #333;
+}
+
+.header-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+
+.card-header .btn-icon-inline {
+    background: linear-gradient(135deg, #eef1ff, #dfe4ff);
+    color: #3d4ba6;
+    border: 1px solid #c7d2ff;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(79, 97, 199, 0.25);
+}
+
+.card-header .btn-icon-inline.btn-icon-inline-sm {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 8px;
+}
+
+.card-header .btn-icon-inline:hover {
+    background: linear-gradient(135deg, #667eea, #6f5cc2);
+    color: white;
+    border-color: #667eea;
+    box-shadow: 0 4px 10px rgba(79, 97, 199, 0.35);
+}
+
+.card-header .btn-icon-inline:active {
+    transform: translateY(1px);
 }
 
 .icon {
@@ -166,8 +219,15 @@ body {
     background: #dee2e6;
 }
 
+.readings-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .readings-list {
-    max-height: 280px;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 

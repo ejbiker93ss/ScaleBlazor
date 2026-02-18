@@ -15,16 +15,16 @@
 
         <div class="reports-tabs">
             <button class="tab-btn @(activeTab == "overview" ? "active" : "")" @onclick="@(() => SetActiveTab("overview"))">
-                📊 Overview
+                Overview
             </button>
             <button class="tab-btn @(activeTab == "trends" ? "active" : "")" @onclick="@(() => SetActiveTab("trends"))">
-                📈 Trends
+                Trends
             </button>
             <button class="tab-btn @(activeTab == "pallets" ? "active" : "")" @onclick="@(() => SetActiveTab("pallets"))">
-                📦 Pallet Stats
+                Pallet Stats
             </button>
             <button class="tab-btn @(activeTab == "export" ? "active" : "")" @onclick="@(() => SetActiveTab("export"))">
-                💾 Export Data
+                Export Data
             </button>
         </div>
 
@@ -34,22 +34,22 @@
                 <div class="overview-section">
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon">⚖️</div>
+                            <div class="stat-icon">Readings</div>
                             <div class="stat-value">@totalReadings</div>
                             <div class="stat-label">Total Readings</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">📦</div>
+                            <div class="stat-icon">Pallets</div>
                             <div class="stat-value">@totalPallets</div>
                             <div class="stat-label">Total Pallets</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">📊</div>
+                            <div class="stat-icon">Average</div>
                             <div class="stat-value">@averageWeight.ToString("F2")</div>
                             <div class="stat-label">Avg Weight (lbs)</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">📈</div>
+                            <div class="stat-icon">Today</div>
                             <div class="stat-value">@todayReadings</div>
                             <div class="stat-label">Today's Readings</div>
                         </div>
@@ -57,7 +57,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">📊</span>
+                            <span class="icon">Average</span>
                             <span>Average Weight Trends</span>
                             <div class="header-buttons">
                                 <select class="view-selector" @bind="averageViewType" @bind:after="UpdateOverviewChart">
@@ -77,7 +77,7 @@
                 <div class="trends-section">
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">📈</span>
+                            <span class="icon">Trends</span>
                             <span>Weight Trends Over Time</span>
                             <div class="header-buttons">
                                 <label class="date-label">From:</label>
@@ -99,7 +99,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">📊</span>
+                            <span class="icon">Hourly</span>
                             <span>Hourly Average - Today</span>
                         </div>
                         <div class="card-body">
@@ -113,7 +113,7 @@
                 <div class="pallets-section">
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">📦</span>
+                            <span class="icon">Pallets</span>
                             <span>Pallet Statistics</span>
                         </div>
                         <div class="card-body">
@@ -157,7 +157,7 @@
                 <div class="export-section">
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">💾</span>
+                            <span class="icon">Export</span>
                             <span>Export Data to CSV</span>
                         </div>
                         <div class="card-body">
@@ -188,7 +188,7 @@
                                     }
                                     else
                                     {
-                                        <span>📥 Download CSV</span>
+                                        <span>Download CSV</span>
                                     }
                                 </button>
 
@@ -204,7 +204,7 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <span class="icon">ℹ️</span>
+                            <span class="icon">Info</span>
                             <span>Export Information</span>
                         </div>
                         <div class="card-body">

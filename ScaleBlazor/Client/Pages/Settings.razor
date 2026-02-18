@@ -21,7 +21,7 @@
             <div class="settings-content">
                 <div class="card">
                     <div class="card-header">
-                        <span class="icon">📦</span>
+                        <span class="icon">Pallets</span>
                         <span>Pallet Configuration</span>
                     </div>
                     <div class="card-body">
@@ -39,7 +39,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <span class="icon">🤖</span>
+                        <span class="icon">Auto</span>
                         <span>Auto-Capture Configuration</span>
                     </div>
                     <div class="card-body">
@@ -72,6 +72,41 @@
                     </div>
                 </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">Connection</span>
+                        <span>Scale Connection</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <label class="setting-label">COM Port</label>
+                            <input type="text"
+                                   class="setting-input"
+                                   @bind="settings.ScalePortName"
+                                   placeholder="COM3" />
+                            <small class="setting-help">Set the port or auto-detect the scale connection.</small>
+                        </div>
+
+                        <button class="btn-secondary" @onclick="AutoDetectPort" disabled="@isDetecting">
+                            @if (isDetecting)
+                            {
+                                <span>Detecting...</span>
+                            }
+                            else
+                            {
+                                <span>Auto-Detect Port</span>
+                            }
+                        </button>
+
+                        @if (detectMessage != null)
+                        {
+                            <div class="save-message @(detectSuccess ? "success" : "error")">
+                                @detectMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+
                 <div class="settings-actions">
                     <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
                         @if (isSaving)
@@ -80,7 +115,7 @@
                         }
                         else
                         {
-                            <span>💾 Save Settings</span>
+                            <span>Save Settings</span>
                         }
                     </button>
 
@@ -90,6 +125,73 @@
                             @saveMessage
                         </div>
                     }
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">Data</span>
+                        <span>Data Retention</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <label class="setting-label">Delete data older than</label>
+                            <input type="date"
+                                   class="setting-input"
+                                   @bind-value="purgeBefore"
+                                   @bind-value:format="yyyy-MM-dd"
+                                   max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            <small class="setting-help">Deletes readings and pallets created before this date.</small>
+                        </div>
+
+                        <button class="btn-secondary" @onclick="PurgeData" disabled="@isPurging">
+                            @if (isPurging)
+                            {
+                                <span>Deleting...</span>
+                            }
+                            else
+                            {
+                                <span>Delete Old Data</span>
+                            }
+                        </button>
+
+                        @if (purgeMessage != null)
+                        {
+                            <div class="save-message @(purgeSuccess ? "success" : "error")">
+                                @purgeMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="icon">Diagnostics</span>
+                        <span>Raw Scale Readings</span>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn-secondary" @onclick="LoadRawReadings" disabled="@isLoadingRaw">
+                            @if (isLoadingRaw)
+                            {
+                                <span>Reading...</span>
+                            }
+                            else
+                            {
+                                <span>Refresh Raw Readings</span>
+                            }
+                        </button>
+
+                        @if (rawMessage != null)
+                        {
+                            <div class="save-message @(rawSuccess ? "success" : "error")">
+                                @rawMessage
+                            </div>
+                        }
+
+                        @if (rawReadings.Count > 0)
+                        {
+                            <pre class="setting-help">@string.Join("\n", rawReadings)</pre>
+                        }
+                    </div>
                 </div>
             </div>
         }
@@ -101,6 +203,17 @@
     private bool isSaving;
     private string? saveMessage;
     private bool saveSuccess;
+    private bool isDetecting;
+    private string? detectMessage;
+    private bool detectSuccess;
+    private DateTime purgeBefore = DateTime.Today.AddDays(-30);
+    private bool isPurging;
+    private string? purgeMessage;
+    private bool purgeSuccess;
+    private bool isLoadingRaw;
+    private string? rawMessage;
+    private bool rawSuccess;
+    private List<string> rawReadings = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,6 +231,42 @@
             Console.WriteLine($"Error loading settings: {ex.Message}");
             saveMessage = $"Error loading settings: {ex.Message}";
             saveSuccess = false;
+        }
+    }
+
+    private async Task AutoDetectPort()
+    {
+        if (settings == null) return;
+
+        isDetecting = true;
+        detectMessage = null;
+
+        try
+        {
+            var response = await Http.PostAsync("api/scale/auto-detect", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<PortDetectionResult>();
+                settings.ScalePortName = result?.PortName ?? settings.ScalePortName;
+                detectMessage = result?.Message ?? "Port detected and saved.";
+                detectSuccess = true;
+            }
+            else
+            {
+                var result = await response.Content.ReadFromJsonAsync<PortDetectionResult>();
+                detectMessage = result?.Message ?? "No scale detected on available ports.";
+                detectSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error detecting port: {ex.Message}");
+            detectMessage = $"Error detecting port: {ex.Message}";
+            detectSuccess = false;
+        }
+        finally
+        {
+            isDetecting = false;
         }
     }
 
@@ -156,8 +305,90 @@
         }
     }
 
+    private async Task PurgeData()
+    {
+        isPurging = true;
+        purgeMessage = null;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/settings/purge", new PurgeRequest
+            {
+                CutoffDate = purgeBefore
+            });
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<PurgeResult>();
+                purgeMessage = result == null
+                    ? "Data deleted."
+                    : $"Deleted {result.DeletedReadings} readings and {result.DeletedPallets} pallets.";
+                purgeSuccess = true;
+            }
+            else
+            {
+                purgeMessage = "Failed to delete old data.";
+                purgeSuccess = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting data: {ex.Message}");
+            purgeMessage = $"Error deleting data: {ex.Message}";
+            purgeSuccess = false;
+        }
+        finally
+        {
+            isPurging = false;
+        }
+    }
+
     private void GoBack()
     {
         Navigation.NavigateTo("/");
+    }
+
+    private async Task LoadRawReadings()
+    {
+        isLoadingRaw = true;
+        rawMessage = null;
+        rawReadings.Clear();
+
+        try
+        {
+            var response = await Http.GetAsync("api/scale/raw-readings?count=50");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                rawMessage = string.IsNullOrWhiteSpace(errorContent)
+                    ? "Failed to load raw readings."
+                    : $"Failed to load raw readings: {errorContent}";
+                rawSuccess = false;
+                return;
+            }
+
+            var readings = await response.Content.ReadFromJsonAsync<List<string>>();
+            if (readings == null || readings.Count == 0)
+            {
+                rawMessage = "No raw readings received.";
+                rawSuccess = false;
+            }
+            else
+            {
+                rawReadings = readings;
+                rawMessage = $"Captured {readings.Count} raw readings.";
+                rawSuccess = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading raw readings: {ex.Message}");
+            rawMessage = $"Error loading raw readings: {ex.Message}";
+            rawSuccess = false;
+        }
+        finally
+        {
+            isLoadingRaw = false;
+        }
     }
 }

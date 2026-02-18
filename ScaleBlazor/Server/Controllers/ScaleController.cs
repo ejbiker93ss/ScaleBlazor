@@ -39,15 +39,16 @@ public class ScaleController : ControllerBase
     }
 
     [HttpGet("status")]
-    public ActionResult<ScaleStatus> GetScaleStatus()
+    public async Task<ActionResult<ScaleStatus>> GetScaleStatus()
     {
         var scaleEnabled = _configuration.GetValue<bool>("Scale:Enabled", false);
+        var settings = await _context.Settings.AsNoTracking().FirstOrDefaultAsync();
 
         return new ScaleStatus
         {
             IsConnected = _scaleService.IsConnected,
             IsEnabled = scaleEnabled,
-            PortName = _configuration["Scale:PortName"] ?? "COM3",
+            PortName = settings?.ScalePortName ?? _configuration["Scale:PortName"] ?? "COM3",
             CurrentWeight = _scaleService.CurrentWeight
         };
     }
@@ -56,6 +57,56 @@ public class ScaleController : ControllerBase
     public ActionResult<List<string>> GetAvailablePorts()
     {
         return _scaleService.GetAvailablePorts();
+    }
+
+    [HttpGet("raw-readings")]
+    public async Task<ActionResult<List<string>>> GetRawReadings([FromQuery] int count = 50)
+    {
+        try
+        {
+            var lines = await _scaleService.CaptureRawLinesAsync(count, TimeSpan.FromSeconds(10), HttpContext.RequestAborted);
+            return lines.ToList();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+    }
+
+    [HttpPost("auto-detect")]
+    public async Task<ActionResult<PortDetectionResult>> AutoDetectPort()
+    {
+        var detectedPort = await _scaleService.AutoDetectPortAsync();
+        if (string.IsNullOrWhiteSpace(detectedPort))
+        {
+            return NotFound(new PortDetectionResult
+            {
+                Success = false,
+                Message = "No scale data detected on any available COM port."
+            });
+        }
+
+        var settings = await _context.Settings.FirstOrDefaultAsync();
+        if (settings == null)
+        {
+            settings = new AppSettings { ReadingsPerPallet = 10 };
+            _context.Settings.Add(settings);
+        }
+
+        settings.ScalePortName = detectedPort;
+        await _context.SaveChangesAsync();
+
+        if (_configuration.GetValue<bool>("Scale:Enabled", false))
+        {
+            _scaleService.Restart();
+        }
+
+        return new PortDetectionResult
+        {
+            Success = true,
+            PortName = detectedPort,
+            Message = $"Detected scale on {detectedPort}."
+        };
     }
 
     [HttpGet("readings")]

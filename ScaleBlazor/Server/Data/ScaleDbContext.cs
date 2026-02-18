@@ -38,6 +38,7 @@ public class ScaleDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.ReadingsPerPallet).IsRequired();
+            entity.Property(e => e.ScalePortName).IsRequired(false);
         });
     }
 }

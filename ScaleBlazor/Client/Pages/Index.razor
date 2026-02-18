@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using ScaleBlazor.Shared
 @using ScaleBlazor.Client.Services
+@using System.Threading
 @inject HttpClient Http
 @inject JSInterop JSInterop
 @inject NavigationManager Navigation
@@ -8,16 +9,16 @@
 
 <div class="scale-system">
     <div class="cards-container">
-        <div class="card">
+        <div class="card @(flashSuccess ? "flash-success" : "")">
             <div class="card-header">
-                <span class="icon">⚖️</span>
+                <span class="icon">Scale</span>
                 <span>Live Reading</span>
                 <div class="header-buttons">
-                    <button class="btn-icon-inline" @onclick="@(() => Navigation.NavigateTo("/reports"))" title="Reports & Analytics">
-                        <span class="icon-text">📊</span>
+                    <button class="btn-icon-inline btn-icon-inline-sm" @onclick="@(() => Navigation.NavigateTo("/reports"))" title="Reports & Analytics">
+                        <span class="icon-text">Reports</span>
                     </button>
-                    <button class="btn-icon-inline" @onclick="@(() => Navigation.NavigateTo("/settings"))" title="Settings">
-                        <span class="icon-text">⚙️</span>
+                    <button class="btn-icon-inline btn-icon-inline-sm" @onclick="@(() => Navigation.NavigateTo("/settings"))" title="Settings">
+                        <span class="icon-text">Settings</span>
                     </button>
                 </div>
             </div>
@@ -41,13 +42,27 @@
                 <div class="live-reading">@currentWeight.ToString("F2")</div>
                 <div class="unit">Lbs</div>
                 <div class="timestamp">@currentTimestamp</div>
-                <button class="btn-primary" @onclick="CaptureReading">Capture Reading</button>
+                <button class="btn-primary" @onclick="CaptureReading" disabled="@isCapturing">
+                    @if (isCapturing)
+                    {
+                        <span>Capturing...</span>
+                    }
+                    else
+                    {
+                        <span>Capture Reading</span>
+                    }
+                </button>
+                @if (flashSuccess)
+                {
+                    <div class="save-message @(captureSuccess ? "success" : "error")">
+                        @captureMessage
+                    </div>
+                }
             </div>
         </div>
 
-        <div class="card">
+        <div class="card readings-card">
             <div class="card-header">
-                <span class="icon">🕐</span>
                 <span>Last 10 Readings</span>
             </div>
             <div class="card-body">
@@ -65,7 +80,7 @@
 
         <div class="card">
             <div class="card-header">
-                <span class="icon">📦</span>
+                <span class="icon">Pallets</span>
                 <span>Last 10 Pallets</span>
             </div>
             <div class="card-body">
@@ -90,7 +105,7 @@
 
         <div class="card">
             <div class="card-header">
-                <span class="icon">📊</span>
+                <span class="icon">Daily Avg</span>
                 <span>Last 10 Days - Daily Average</span>
             </div>
             <div class="card-body">
@@ -101,7 +116,7 @@
 
     <div class="timeline-card">
         <div class="card-header">
-            <span class="icon">📈</span>
+            <span class="icon">Timeline</span>
             <span>Today's Weight Timeline</span>
         </div>
         <div class="card-body">
@@ -120,7 +135,13 @@
     private List<ScaleReading> todayReadings = new();
     private List<DailyAverage> dailyAverages = new();
     private Timer? updateTimer;
+    private readonly SemaphoreSlim updateLock = new(1, 1);
     private int readingsPerPallet = 10;
+    private int? lastReadingId;
+    private bool flashSuccess;
+    private bool isCapturing;
+    private string? captureMessage;
+    private bool captureSuccess;
 
     protected override async Task OnInitializedAsync()
     {
@@ -167,6 +188,7 @@
             activePallet = await Http.GetFromJsonAsync<Pallet?>("api/pallets/active");
             todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
             dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=10") ?? new();
+            lastReadingId = lastReadings.FirstOrDefault()?.Id;
 
             await InvokeAsync(StateHasChanged);
             await UpdateCharts();
@@ -179,6 +201,11 @@
 
     private async Task UpdateLiveReading()
     {
+        if (!await updateLock.WaitAsync(0))
+        {
+            return;
+        }
+
         try
         {
             var reading = await Http.GetFromJsonAsync<ScaleReading>("api/scale/current");
@@ -186,6 +213,7 @@
             {
                 currentWeight = reading.Weight;
                 currentTimestamp = reading.Timestamp.ToString("h:mm:ss tt");
+                await CheckForNewReading();
                 await InvokeAsync(StateHasChanged);
             }
         }
@@ -193,19 +221,86 @@
         {
             Console.WriteLine($"Error updating live reading: {ex.Message}");
         }
+        finally
+        {
+            updateLock.Release();
+        }
     }
 
     private async Task CaptureReading()
     {
         try
         {
-            await Http.PostAsync("api/scale/capture", null);
-            await LoadData();
+            isCapturing = true;
+            captureMessage = null;
+
+            var response = await Http.PostAsync("api/scale/capture", null);
+            if (response.IsSuccessStatusCode)
+            {
+                var reading = await response.Content.ReadFromJsonAsync<ScaleReading>();
+                if (reading != null)
+                {
+                    currentWeight = reading.Weight;
+                    currentTimestamp = reading.Timestamp.ToString("h:mm:ss tt");
+                }
+
+                await TriggerFlash();
+                await LoadData();
+                captureMessage = "Reading captured.";
+                captureSuccess = true;
+            }
+            else
+            {
+                var errorBody = await response.Content.ReadAsStringAsync();
+                var detail = string.IsNullOrWhiteSpace(errorBody) ? response.ReasonPhrase : errorBody;
+                captureMessage = $"Failed to capture reading ({(int)response.StatusCode}): {detail}";
+                captureSuccess = false;
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error capturing reading: {ex.Message}");
+            captureMessage = $"Error capturing reading: {ex.Message}";
+            captureSuccess = false;
         }
+        finally
+        {
+            isCapturing = false;
+        }
+    }
+
+    private async Task CheckForNewReading()
+    {
+        try
+        {
+            var latestReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings?count=1");
+            var latestReading = latestReadings?.FirstOrDefault();
+
+            if (latestReading != null && latestReading.Id != lastReadingId)
+            {
+                lastReadingId = latestReading.Id;
+                await TriggerFlash();
+                await LoadData();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error checking for new reading: {ex.Message}");
+        }
+    }
+
+    private async Task TriggerFlash()
+    {
+        if (flashSuccess)
+        {
+            return;
+        }
+
+        flashSuccess = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(700);
+        flashSuccess = false;
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task CompletePallet()
@@ -237,6 +332,7 @@
     public void Dispose()
     {
         updateTimer?.Dispose();
+        updateLock.Dispose();
     }
 
     public class ScaleStatus
