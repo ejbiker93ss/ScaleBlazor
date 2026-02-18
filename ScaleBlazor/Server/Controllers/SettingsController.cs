@@ -21,7 +21,7 @@ public class SettingsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<AppSettings>> GetSettings()
     {
-        var settings = await _context.Settings.FirstOrDefaultAsync();
+        var settings = await _context.Settings.AsNoTracking().FirstOrDefaultAsync();
         if (settings == null)
         {
             settings = new AppSettings

@@ -80,7 +80,9 @@ using (var scope = app.Services.CreateScope())
 
     ApplyPendingSchemaUpdates(db);
 
-    if (app.Environment.IsDevelopment() && !db.Pallets.Any())
+    var seedSampleData = app.Configuration.GetValue<bool>("SeedSampleData", false);
+
+    if (app.Environment.IsDevelopment() && seedSampleData && !db.Pallets.Any())
     {
         var random = new Random();
 

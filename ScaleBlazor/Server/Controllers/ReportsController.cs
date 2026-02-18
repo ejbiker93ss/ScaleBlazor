@@ -43,6 +43,7 @@ public class ReportsController : ControllerBase
         var startDate = DateTime.Now.AddDays(-days);
 
         var readings = await _context.ScaleReadings
+            .AsNoTracking()
             .Where(r => r.Timestamp >= startDate)
             .GroupBy(r => r.Timestamp.Date)
             .Select(g => new AverageData
@@ -63,6 +64,7 @@ public class ReportsController : ControllerBase
         var startDate = DateTime.Now.AddDays(-weeks * 7);
 
         var readings = await _context.ScaleReadings
+            .AsNoTracking()
             .Where(r => r.Timestamp >= startDate)
             .ToListAsync();
 
@@ -93,6 +95,7 @@ public class ReportsController : ControllerBase
         var startDate = DateTime.Now.AddDays(-days).Date;
 
         var readings = await _context.ScaleReadings
+            .AsNoTracking()
             .Where(r => r.Timestamp >= startDate)
             .GroupBy(r => r.Timestamp.Date)
             .Select(g => new AverageData
@@ -120,6 +123,7 @@ public class ReportsController : ControllerBase
             csv.AppendLine("Reading ID,Weight (lbs),Timestamp,Pallet ID");
             
             var readings = await _context.ScaleReadings
+                .AsNoTracking()
                 .Where(r => r.Timestamp >= startDate && r.Timestamp <= endDate)
                 .OrderByDescending(r => r.Timestamp)
                 .ToListAsync();
@@ -149,6 +153,7 @@ public class ReportsController : ControllerBase
             }
 
             var pallets = await _context.Pallets
+                .AsNoTracking()
                 .Where(p => p.CreatedAt >= startDate && p.CreatedAt <= endDate)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();

@@ -113,6 +113,7 @@ public class ScaleController : ControllerBase
     public async Task<ActionResult<List<ScaleReading>>> GetLastReadings([FromQuery] int count = 10)
     {
         return await _context.ScaleReadings
+            .AsNoTracking()
             .OrderByDescending(r => r.Timestamp)
             .Take(count)
             .ToListAsync();
@@ -123,6 +124,7 @@ public class ScaleController : ControllerBase
     {
         var today = DateTime.Today;
         return await _context.ScaleReadings
+            .AsNoTracking()
             .Where(r => r.Timestamp >= today)
             .OrderBy(r => r.Timestamp)
             .ToListAsync();
@@ -134,12 +136,17 @@ public class ScaleController : ControllerBase
         var startDate = DateTime.Today.AddDays(-days);
 
         var averages = await _context.ScaleReadings
+            .AsNoTracking()
             .Where(r => r.Timestamp >= startDate)
             .GroupBy(r => r.Timestamp.Date)
             .Select(g => new DailyAverage
             {
                 Date = g.Key,
-                AverageWeight = g.Average(r => r.Weight)
+                AverageWeight = g.Average(r => r.Weight),
+                PalletCount = g.Select(r => r.PalletId)
+                    .Where(palletId => palletId != null && palletId != "")
+                    .Distinct()
+                    .Count()
             })
             .OrderByDescending(d => d.Date)
             .Take(days)

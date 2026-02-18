@@ -11,8 +11,6 @@
     <div class="cards-container">
         <div class="card @(flashSuccess ? "flash-success" : "")">
             <div class="card-header">
-                <span class="icon">Scale</span>
-                <span>Live Reading</span>
                 <div class="header-buttons">
                     <button class="btn-icon-inline btn-icon-inline-sm" @onclick="@(() => Navigation.NavigateTo("/reports"))" title="Reports & Analytics">
                         <span class="icon-text">Reports</span>
@@ -52,8 +50,8 @@
                         <span>Capture Reading</span>
                     }
                 </button>
-                @if (flashSuccess)
-                {
+                @if (flashSuccess && !string.IsNullOrWhiteSpace(captureMessage))
+                {   
                     <div class="save-message @(captureSuccess ? "success" : "error")">
                         @captureMessage
                     </div>
@@ -84,19 +82,21 @@
                 <span>Last 10 Pallets</span>
             </div>
             <div class="card-body">
-                <div class="pallet-info">
-                    <span>Current Pallet</span>
-                    <span class="pallet-id">@(activePallet?.PalletId ?? "N/A")</span>
-                    <span class="reading-count">@(activePallet?.ReadingCount ?? 0) readings</span>
+                <div class="pallet-summary">
+                    <div class="pallet-info">
+                        <span class="pallet-id">Current Pallet @(activePallet?.PalletId ?? "N/A")</span>
+                        <span class="pallet-weight highlight-value">@(activePallet?.TotalWeight.ToString("F2") ?? "0.00") lbs</span>
+                        <span class="metric-small">@(activePallet?.ReadingCount ?? 0) readings</span>
+                    </div>
+                    <button class="btn-secondary" @onclick="CompletePallet">✓ Complete Pallet</button>
                 </div>
-                <button class="btn-secondary" @onclick="CompletePallet">✓ Complete Pallet</button>
                 <div class="pallets-list">
-                    @foreach (var pallet in pallets)
+                    @foreach (var pallet in pallets.Where(pallet => activePallet == null || pallet.PalletId != activePallet.PalletId))
                     {
                         <div class="pallet-item">
                             <span class="pallet-name">@pallet.PalletId</span>
-                            <span class="pallet-readings">@pallet.ReadingCount readings</span>
-                            <span class="pallet-weight">@pallet.TotalWeight.ToString("F2") lbs</span>
+                            <span class="pallet-readings metric-small">@pallet.ReadingCount readings</span>
+                            <span class="pallet-weight @(pallet.Id == LastCompletedPallet?.Id ? "highlight-value" : "")">@pallet.TotalWeight.ToString("F2") lbs</span>
                         </div>
                     }
                 </div>
@@ -105,11 +105,34 @@
 
         <div class="card">
             <div class="card-header">
-                <span class="icon">Daily Avg</span>
-                <span>Last 10 Days - Daily Average</span>
+                <span class="icon">Daily Average</span>
+                <div class="header-buttons">
+                    <button class="card-tab @(dailyAverageView == "list" ? "active" : "")" @onclick="@(() => SetDailyAverageView("list"))">
+                        Values
+                    </button>
+                    <button class="card-tab @(dailyAverageView == "graph" ? "active" : "")" @onclick="@(() => SetDailyAverageView("graph"))">
+                        Graph
+                    </button>
+                </div>
             </div>
             <div class="card-body">
-                <canvas id="dailyChart"></canvas>
+                @if (dailyAverageView == "list")
+                {
+                    <div class="pallets-list">
+                        @foreach (var day in dailyAverages)
+                        {
+                            <div class="pallet-item">
+                                <span class="pallet-name">@day.Date.ToString("MMM dd")</span>
+                                <span class="pallet-readings metric-small">@day.PalletCount pallets</span>
+                                <span class="pallet-weight @(day.Date.Date == LatestDailyAverage?.Date.Date ? "highlight-value" : "")">@day.AverageWeight.ToString("F2") lbs</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <canvas id="dailyChart"></canvas>
+                }
             </div>
         </div>
     </div>
@@ -134,6 +157,8 @@
     private Pallet? activePallet;
     private List<ScaleReading> todayReadings = new();
     private List<DailyAverage> dailyAverages = new();
+    private string dailyAverageView = "list";
+    private bool renderDailyAverageChart;
     private Timer? updateTimer;
     private readonly SemaphoreSlim updateLock = new(1, 1);
     private int readingsPerPallet = 10;
@@ -142,13 +167,29 @@
     private bool isCapturing;
     private string? captureMessage;
     private bool captureSuccess;
+    private Pallet? LastCompletedPallet => pallets
+        .Where(pallet => pallet.IsCompleted)
+        .OrderByDescending(pallet => pallet.CreatedAt)
+        .FirstOrDefault();
+    private DailyAverage? LatestDailyAverage => dailyAverages
+        .OrderByDescending(day => day.Date)
+        .FirstOrDefault();
 
     protected override async Task OnInitializedAsync()
     {
         await LoadSettings();
         await LoadScaleStatus();
         await LoadData();
-        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromSeconds(2));
+        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (renderDailyAverageChart)
+        {
+            renderDailyAverageChart = false;
+            await UpdateCharts();
+        }
     }
 
     private async Task LoadSettings()
@@ -298,7 +339,7 @@
 
         flashSuccess = true;
         await InvokeAsync(StateHasChanged);
-        await Task.Delay(700);
+        await Task.Delay(1200);
         flashSuccess = false;
         await InvokeAsync(StateHasChanged);
     }
@@ -313,6 +354,21 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error completing pallet: {ex.Message}");
+        }
+    }
+
+    private void SetDailyAverageView(string view)
+    {
+        if (dailyAverageView == view)
+        {
+            return;
+        }
+
+        dailyAverageView = view;
+
+        if (view == "graph")
+        {
+            renderDailyAverageChart = true;
         }
     }
 

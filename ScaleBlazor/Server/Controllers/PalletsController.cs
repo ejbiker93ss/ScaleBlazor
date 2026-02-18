@@ -20,6 +20,7 @@ public class PalletsController : ControllerBase
     public async Task<ActionResult<List<Pallet>>> GetPallets([FromQuery] int count = 10)
     {
         return await _context.Pallets
+            .AsNoTracking()
             .OrderByDescending(p => p.CreatedAt)
             .Take(count)
             .ToListAsync();
@@ -29,6 +30,7 @@ public class PalletsController : ControllerBase
     public async Task<ActionResult<Pallet?>> GetActivePallet()
     {
         return await _context.Pallets
+            .AsNoTracking()
             .Where(p => !p.IsCompleted)
             .OrderByDescending(p => p.CreatedAt)
             .FirstOrDefaultAsync();

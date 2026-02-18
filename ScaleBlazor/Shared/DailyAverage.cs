@@ -4,4 +4,5 @@ public class DailyAverage
 {
     public DateTime Date { get; set; }
     public double AverageWeight { get; set; }
+    public int PalletCount { get; set; }
 }

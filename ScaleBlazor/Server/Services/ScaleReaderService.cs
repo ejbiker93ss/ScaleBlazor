@@ -238,8 +238,6 @@ public class ScaleReaderService : IDisposable
             // or ST,NT,+00000lb,CR (Stable, Net, weight in pounds)
             // Format may vary: Check actual protocol from manufacturer
 
-            _logger.LogInformation($"Raw scale data: {line}"); // Changed to Information so it's always visible
-
             RecordRawLine(line);
 
             if (!line.StartsWith("WGT", StringComparison.OrdinalIgnoreCase))
@@ -254,7 +252,6 @@ public class ScaleReaderService : IDisposable
             if (line.Contains(','))
             {
                 var parts = line.Split(',');
-                _logger.LogInformation($"Comma-separated format detected. Parts: {string.Join(" | ", parts)}");
                 if (parts.Length >= 3)
                 {
                     var weightStr = parts[2].Trim();
@@ -264,7 +261,6 @@ public class ScaleReaderService : IDisposable
             // Format 2: Just the weight value
             else
             {
-                _logger.LogInformation($"Simple format detected, parsing: {line}");
                 weight = ParseWeightString(line);
             }
 
@@ -273,8 +269,6 @@ public class ScaleReaderService : IDisposable
                 // Double the weight to get correct case weight
                 var originalWeight = weight;
                 weight *= 2;
-
-                _logger.LogInformation($"Parsed weight: {originalWeight:F2} lbs → Case weight: {weight:F2} lbs");
 
                 await RefreshSettingsAsync();
 
@@ -286,7 +280,7 @@ public class ScaleReaderService : IDisposable
                     }
 
                     _recentWeights.Clear();
-                    UpdateCurrentWeight(0);
+                    UpdateCurrentWeight(weight);
                     return;
                 }
 
@@ -298,7 +292,7 @@ public class ScaleReaderService : IDisposable
 
                 AddReading(weight);
 
-                if (_autoCaptureEnabled && ShouldAutoCapture(out var stableWeight))
+                if (_autoCaptureEnabled && ShouldAutoCapture(out var stableWeight) && await ShouldCaptureFromHistoryAsync(stableWeight))
                 {
                     _autoReadLocked = true;
                     _recentWeights.Clear();
@@ -432,9 +426,13 @@ public class ScaleReaderService : IDisposable
         }
 
         var currentWeight = lastReadings[^1];
-        var percentDiff = Math.Abs(currentWeight - avgLast) / avgLast * 100.0;
+        var diff = currentWeight >= avgLast ? currentWeight - avgLast : avgLast - currentWeight;
+        var percentDiff = diff / avgLast * 100.0;
+        var minWeight = lastReadings.Min();
+        var maxWeight = lastReadings.Max();
+        var rangePercent = (maxWeight - minWeight) / avgLast * 100.0;
 
-        if (percentDiff > _autoCaptureThresholdPercent)
+        if (percentDiff > _autoCaptureThresholdPercent || rangePercent > _autoCaptureThresholdPercent)
         {
             return false;
         }
@@ -443,14 +441,44 @@ public class ScaleReaderService : IDisposable
         return true;
     }
 
+    private async Task<bool> ShouldCaptureFromHistoryAsync(double stableWeight)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ScaleDbContext>();
+
+        var recentWeights = await context.ScaleReadings
+            .AsNoTracking()
+            .OrderByDescending(r => r.Timestamp)
+            .Take(HistoryReadCount)
+            .Select(r => r.Weight)
+            .ToListAsync();
+
+        if (recentWeights.Count == 0)
+        {
+            return true;
+        }
+
+        var avgLast = recentWeights.Average();
+        var baseline = avgLast >= 0 ? avgLast : -avgLast;
+
+        if (baseline <= ZeroThreshold)
+        {
+            return true;
+        }
+
+        var diff = stableWeight >= avgLast ? stableWeight - avgLast : avgLast - stableWeight;
+        var percentDiff = diff / baseline * 100.0;
+
+        return percentDiff > _autoCaptureThresholdPercent;
+    }
+
     private void UpdateCurrentWeight(double weight)
     {
         var oldWeight = _currentWeight;
         _currentWeight = weight;
 
-        if (Math.Abs(oldWeight - weight) > 0.01)
+        if (oldWeight - weight > 0.01)
         {
-            _logger.LogInformation($"Weight changed: {weight:F2} lbs");
             WeightChanged?.Invoke(this, new WeightChangedEventArgs(weight));
         }
     }
@@ -682,7 +710,6 @@ public class ScaleReaderService : IDisposable
             serialPort.Open();
             _serialPort?.Dispose();
             _serialPort = serialPort;
-            _logger.LogInformation("Scale connected on {PortName}", portName);
             return true;
         }
         catch (UnauthorizedAccessException ex)
@@ -708,7 +735,6 @@ public class ScaleReaderService : IDisposable
             if (_serialPort?.IsOpen == true)
             {
                 _serialPort.Close();
-                _logger.LogInformation("Scale connection closed");
             }
         }
         catch (Exception ex)

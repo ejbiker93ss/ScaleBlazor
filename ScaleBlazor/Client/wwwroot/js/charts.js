@@ -12,10 +12,15 @@ window.JSInterop = {
         }).reverse();
 
         const values = data.map(d => d.averageWeight).reverse();
+        const palletCounts = data.map(d => d.palletCount ?? 0).reverse();
 
         if (dailyChart) {
             dailyChart.destroy();
         }
+
+        const minValue = values.length > 0 ? Math.min(...values) : 34;
+        const maxValue = values.length > 0 ? Math.max(...values) : 55;
+        const padding = (maxValue - minValue) * 0.1 || 1;
 
         const isSmallScreen = window.innerWidth <= 900 && window.innerHeight <= 450;
 
@@ -35,13 +40,21 @@ window.JSInterop = {
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const count = palletCounts[context.dataIndex] ?? 0;
+                                return `Avg: ${context.parsed.y.toFixed(2)} lbs (${count} pallets)`;
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: false,
-                        min: 44,
-                        max: 47,
+                        min: minValue - padding,
+                        max: maxValue + padding,
                         ticks: {
                             stepSize: 1,
                             font: {
@@ -85,6 +98,10 @@ window.JSInterop = {
             timelineChart.destroy();
         }
 
+        const minValue = values.length > 0 ? Math.min(...values) : 35;
+        const maxValue = values.length > 0 ? Math.max(...values) : 55;
+        const padding = (maxValue - minValue) * 0.1 || 1;
+
         const isSmallScreen = window.innerWidth <= 900 && window.innerHeight <= 450;
 
         timelineChart = new Chart(ctx, {
@@ -114,8 +131,8 @@ window.JSInterop = {
                 scales: {
                     y: {
                         beginAtZero: false,
-                        min: 44,
-                        max: 47,
+                        min: minValue - padding,
+                        max: maxValue + padding,
                         ticks: {
                             stepSize: 1,
                             font: {
@@ -180,6 +197,10 @@ window.renderAverageWeightChart = function (data, viewType) {
     const labels = data.map(d => d.label);
     const values = data.map(d => d.averageWeight);
 
+    const minValue = values.length > 0 ? Math.min(...values) : 35;
+    const maxValue = values.length > 0 ? Math.max(...values) : 55;
+    const padding = (maxValue - minValue) * 0.1 || 1;
+
     const title = viewType === 'weekly' ? 'Weekly Average Weight' : 'Daily Average Weight';
 
     averageWeightChart = new Chart(ctx, {
@@ -217,6 +238,8 @@ window.renderAverageWeightChart = function (data, viewType) {
             scales: {
                 y: {
                     beginAtZero: false,
+                    min: minValue - padding,
+                    max: maxValue + padding,
                     ticks: {
                         callback: function(value) {
                             return value.toFixed(1) + ' lbs';
@@ -301,8 +324,8 @@ window.renderTrendsChart = function (data) {
     const values = data.map(d => d.averageWeight);
 
     // Calculate dynamic min/max with some padding
-    const minValue = values.length > 0 ? Math.min(...values) : 44;
-    const maxValue = values.length > 0 ? Math.max(...values) : 47;
+    const minValue = values.length > 0 ? Math.min(...values) : 35;
+    const maxValue = values.length > 0 ? Math.max(...values) : 55;
     const padding = (maxValue - minValue) * 0.1 || 1;
 
     trendsChart = new Chart(ctx, {
@@ -340,8 +363,8 @@ window.renderTrendsChart = function (data) {
             scales: {
                 y: {
                     beginAtZero: false,
-                    min: Math.floor(minValue - padding),
-                    max: Math.ceil(maxValue + padding),
+                    min: minValue - padding,
+                    max: maxValue + padding,
                     ticks: {
                         callback: function(value) {
                             return value.toFixed(1) + ' lbs';
@@ -380,7 +403,11 @@ window.renderHourlyChart = function () {
         values.push(i >= 8 && i <= 17 ? 45 + Math.random() * 1.5 : 0);
     }
 
-    hourlyChart = new Chart(ctx, {
+        const minValue = values.length > 0 ? Math.min(...values) : 35;
+        const maxValue = values.length > 0 ? Math.max(...values) : 55;
+        const padding = (maxValue - minValue) * 0.1 || 1;
+
+        hourlyChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -402,8 +429,8 @@ window.renderHourlyChart = function () {
             scales: {
                 y: {
                     beginAtZero: false,
-                    min: 44,
-                    max: 47
+                    min: minValue - padding,
+                    max: maxValue + padding
                 }
             }
         }
