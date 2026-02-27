@@ -73,6 +73,24 @@ public class ScaleController : ControllerBase
         }
     }
 
+    [HttpGet("speed-test")]
+    public async Task<ActionResult<string>> RunSpeedTest([FromQuery] int count = 20)
+    {
+        try
+        {
+            var result = await _scaleService.RunReadingSpeedTestAsync(count);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpPost("auto-detect")]
     public async Task<ActionResult<PortDetectionResult>> AutoDetectPort()
     {
@@ -210,6 +228,43 @@ public class ScaleController : ControllerBase
         await _context.SaveChangesAsync();
 
         return reading;
+    }
+
+    [HttpDelete("readings/{id}")]
+    public async Task<IActionResult> DeleteReading(int id)
+    {
+        var reading = await _context.ScaleReadings.FindAsync(id);
+        if (reading == null)
+        {
+            return NotFound();
+        }
+
+        _context.ScaleReadings.Remove(reading);
+
+        if (!string.IsNullOrEmpty(reading.PalletId))
+        {
+            var pallet = await _context.Pallets.FirstOrDefaultAsync(p => p.PalletId == reading.PalletId);
+            if (pallet != null)
+            {
+                pallet.ReadingCount--;
+
+                var remainingReadings = await _context.ScaleReadings
+                    .Where(r => r.PalletId == pallet.PalletId && r.Id != id)
+                    .ToListAsync();
+
+                if (remainingReadings.Any())
+                {
+                    pallet.TotalWeight = remainingReadings.Average(r => r.Weight);
+                }
+                else
+                {
+                    pallet.TotalWeight = 0;
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync();
+        return NoContent();
     }
 
     private double GenerateSimulatedWeight()

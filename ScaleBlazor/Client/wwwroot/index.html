@@ -7,8 +7,9 @@
     <title>Pallet Scale System</title>
     <base href="/" />
     <link href="css/app.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="lib/mudblazor/MudBlazor.min.css" rel="stylesheet" />
+
     <!-- If you add any scoped CSS files, uncomment the following to load them
     <link href="ScaleBlazor.Client.styles.css" rel="stylesheet" /> -->
 </head>
@@ -21,8 +22,122 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script src="lib/chartjs/chart.umd.min.js"></script>
+    <script>
+        let readingSuccessAudio = null;
+        let readingSuccessUnlocked = false;
+
+        const getReadingSuccessAudio = (url) => {
+            if (!readingSuccessAudio) {
+                readingSuccessAudio = new Audio(url);
+                readingSuccessAudio.preload = 'auto';
+            }
+            if (readingSuccessAudio.src !== new URL(url, window.location.href).href) {
+                readingSuccessAudio.src = url;
+            }
+            return readingSuccessAudio;
+        };
+
+        window.JSInterop = {
+            initializeSound: function (url) {
+                const audio = getReadingSuccessAudio(url);
+                if (readingSuccessUnlocked) return;
+                const unlock = () => {
+                    if (readingSuccessUnlocked) return;
+                    audio.muted = true;
+                    audio.play().then(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                        audio.muted = false;
+                        readingSuccessUnlocked = true;
+                    }).catch(() => { });
+                };
+                document.addEventListener('pointerdown', unlock, { once: true });
+            },
+            primeSound: function (url) {
+                const audio = getReadingSuccessAudio(url);
+                audio.muted = true;
+                return audio.play().then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.muted = false;
+                    readingSuccessUnlocked = true;
+                }).catch(() => { });
+            },
+            playSound: function (url) {
+                const audio = getReadingSuccessAudio(url);
+                audio.currentTime = 0;
+                audio.play().then(() => {
+                    readingSuccessUnlocked = true;
+                }).catch(() => { });
+            },
+            exitKiosk: function () {
+                const doc = document;
+                const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+                if (!isFullscreen) return;
+                const exitFullscreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+                if (exitFullscreen) return exitFullscreen.call(doc);
+            },
+            _dailyChart: null,
+            _timelineChart: null,
+            updateDailyChart: function (data) {
+                const ctx = document.getElementById('dailyChart');
+                if (!ctx) return;
+                const labels = data.map(d => { const date = new Date(d.date); return `${date.toLocaleDateString('en-US', { month: 'short' })} ${date.getDate()}`; });
+                const values = data.map(d => d.averageWeight);
+                const palletCounts = data.map(d => d.palletCount ?? 0);
+                if (this._dailyChart) this._dailyChart.destroy();
+                const minValue = values.length > 0 ? Math.min(...values) : 34;
+                const maxValue = values.length > 0 ? Math.max(...values) : 55;
+                const padding = (maxValue - minValue) * 0.1 || 1;
+                const isSmall = window.innerWidth <= 900 && window.innerHeight <= 450;
+                this._dailyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: labels, datasets: [{ data: values, backgroundColor: '#FF6B35', borderRadius: isSmall ? 1 : 4 }] },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { const count = palletCounts[context.dataIndex] ?? 0; return `Avg: ${context.parsed.x.toFixed(2)} lbs (${count} pallets)`; } } } },
+                        scales: { x: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, y: { grid: { display: false }, ticks: { font: { size: isSmall ? 5 : 11 } } } },
+                        layout: { padding: isSmall ? 0 : 10 }
+                    }
+                });
+            },
+            updateTimelineChart: function (data) {
+                const ctx = document.getElementById('timelineChart');
+                if (!ctx) return;
+                const labels = data.map(d => { const date = new Date(d.timestamp); return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); });
+                const values = data.map(d => d.weight);
+                if (this._timelineChart) this._timelineChart.destroy();
+                const minValue = values.length > 0 ? Math.min(...values) : 35;
+                const maxValue = values.length > 0 ? Math.max(...values) : 55;
+                const padding = (maxValue - minValue) * 0.1 || 1;
+                const isSmall = window.innerWidth <= 900 && window.innerHeight <= 450;
+                this._timelineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: labels, datasets: [{ data: values, borderColor: '#4FC3F7', backgroundColor: 'rgba(79, 195, 247, 0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#4FC3F7', pointBorderColor: '#4FC3F7', pointRadius: isSmall ? 1 : 4, borderWidth: isSmall ? 1 : 2 }] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, x: { grid: { color: '#e0e0e0', display: !isSmall }, ticks: { font: { size: isSmall ? 5 : 11 }, maxRotation: isSmall ? 45 : 0, minRotation: isSmall ? 45 : 0 } } },
+                        layout: { padding: isSmall ? 0 : 10 }
+                    }
+                });
+            }
+        };
+
+        window.downloadFile = async function (url, filename) {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            window.URL.revokeObjectURL(link.href);
+        };
+    </script>
+    <script src="lib/mudblazor/MudBlazor.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script src="js/charts.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 using ScaleBlazor.Client;
 using ScaleBlazor.Client.Services;
 
@@ -19,5 +20,6 @@ builder.Services.AddHttpClient("ScaleBlazor.ServerAPI", client =>
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ScaleBlazor.ServerAPI"));
 
 builder.Services.AddScoped<JSInterop>();
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();

@@ -1,5 +1,20 @@
 let dailyChart = null;
 let timelineChart = null;
+let readingSuccessAudio = null;
+let readingSuccessUnlocked = false;
+
+const getReadingSuccessAudio = (url) => {
+    if (!readingSuccessAudio) {
+        readingSuccessAudio = new Audio(url);
+        readingSuccessAudio.preload = 'auto';
+    }
+
+    if (readingSuccessAudio.src !== new URL(url, window.location.href).href) {
+        readingSuccessAudio.src = url;
+    }
+
+    return readingSuccessAudio;
+};
 
 window.JSInterop = {
     updateDailyChart: function (data) {
@@ -162,10 +177,83 @@ window.JSInterop = {
                 }
             }
         });
+    },
+
+    initializeSound: function (url) {
+        const audio = getReadingSuccessAudio(url);
+
+        if (readingSuccessUnlocked) {
+            return;
+        }
+
+        const unlock = () => {
+            if (readingSuccessUnlocked) {
+                return;
+            }
+
+            audio.muted = true;
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.muted = false;
+                readingSuccessUnlocked = true;
+            }).catch(() => {
+            });
+        };
+
+        document.addEventListener('pointerdown', unlock, { once: true });
+    },
+
+    primeSound: function (url) {
+        const audio = getReadingSuccessAudio(url);
+        audio.muted = true;
+        return audio.play().then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.muted = false;
+            readingSuccessUnlocked = true;
+        }).catch(() => {
+        });
+    },
+
+    playSound: function (url) {
+        const audio = getReadingSuccessAudio(url);
+        audio.currentTime = 0;
+        audio.play().then(() => {
+            readingSuccessUnlocked = true;
+        }).catch(() => {
+        });
+    },
+
+    exitKiosk: function () {
+        const doc = document;
+        const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+        if (!isFullscreen) {
+            return;
+        }
+
+        const exitFullscreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+        if (exitFullscreen) {
+            return exitFullscreen.call(doc);
+        }
     }
 };
 
-// File download helper
+if (!window.JSInterop.exitKiosk) {
+    window.JSInterop.exitKiosk = function () {
+        const doc = document;
+        const isFullscreen = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+        if (!isFullscreen) {
+            return;
+        }
+
+        const exitFullscreen = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+        if (exitFullscreen) {
+            return exitFullscreen.call(doc);
+        }
+    };
+}
+
 window.downloadFile = async function (url, filename) {
     try {
         const response = await fetch(url);
@@ -181,7 +269,6 @@ window.downloadFile = async function (url, filename) {
     }
 };
 
-// Reports page charts
 let averageWeightChart = null;
 let trendsChart = null;
 let hourlyChart = null;
@@ -271,7 +358,6 @@ window.renderDistributionChart = function () {
         distributionChart.destroy();
     }
 
-    // Sample data - replace with actual API call
     const labels = ['44.0-44.5', '44.5-45.0', '45.0-45.5', '45.5-46.0', '46.0-46.5'];
     const values = [15, 45, 120, 80, 25];
 
@@ -319,11 +405,9 @@ window.renderTrendsChart = function (data) {
         trendsChart.destroy();
     }
 
-    // Use actual data from API
     const labels = data.map(d => d.label);
     const values = data.map(d => d.averageWeight);
 
-    // Calculate dynamic min/max with some padding
     const minValue = values.length > 0 ? Math.min(...values) : 35;
     const maxValue = values.length > 0 ? Math.max(...values) : 55;
     const padding = (maxValue - minValue) * 0.1 || 1;
@@ -395,7 +479,6 @@ window.renderHourlyChart = function () {
         hourlyChart.destroy();
     }
 
-    // Sample data - replace with actual API call
     const labels = [];
     const values = [];
     for (let i = 0; i < 24; i++) {
@@ -403,11 +486,11 @@ window.renderHourlyChart = function () {
         values.push(i >= 8 && i <= 17 ? 45 + Math.random() * 1.5 : 0);
     }
 
-        const minValue = values.length > 0 ? Math.min(...values) : 35;
-        const maxValue = values.length > 0 ? Math.max(...values) : 55;
-        const padding = (maxValue - minValue) * 0.1 || 1;
+    const minValue = values.length > 0 ? Math.min(...values) : 35;
+    const maxValue = values.length > 0 ? Math.max(...values) : 55;
+    const padding = (maxValue - minValue) * 0.1 || 1;
 
-        hourlyChart = new Chart(ctx, {
+    hourlyChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -436,4 +519,3 @@ window.renderHourlyChart = function () {
         }
     });
 };
-

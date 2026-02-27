@@ -67,7 +67,11 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="averageWeightChart"></canvas>
+                            <MudChart ChartType="ChartType.Line"
+                                      ChartSeries="@OverviewChartSeries"
+                                      XAxisLabels="@OverviewChartLabels"
+                                      Width="100%" Height="300px"
+                                      ChartOptions="@overviewChartOptions" />
                         </div>
                     </div>
                 </div>
@@ -93,7 +97,11 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="trendsChart"></canvas>
+                            <MudChart ChartType="ChartType.Line"
+                                      ChartSeries="@TrendsChartSeries"
+                                      XAxisLabels="@TrendsChartLabels"
+                                      Width="100%" Height="300px"
+                                      ChartOptions="@trendsChartOptions" />
                         </div>
                     </div>
 
@@ -103,7 +111,11 @@
                             <span>Hourly Average - Today</span>
                         </div>
                         <div class="card-body">
-                            <canvas id="hourlyChart"></canvas>
+                            <MudChart ChartType="ChartType.Bar"
+                                      ChartSeries="@HourlyChartSeries"
+                                      XAxisLabels="@HourlyChartLabels"
+                                      Width="100%" Height="300px"
+                                      ChartOptions="@hourlyChartOptions" />
                         </div>
                     </div>
                 </div>
@@ -251,26 +263,9 @@
         await LoadTrendsData();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UpdateCharts();
-        }
-    }
-
     private void SetActiveTab(string tab)
     {
         activeTab = tab;
-        StateHasChanged();
-        if (tab == "overview")
-        {
-            _ = UpdateCharts();
-        }
-        else if (tab == "trends")
-        {
-            _ = UpdateTrendsChart();
-        }
     }
 
     private async Task SetTrendsPreset(int days)
@@ -333,35 +328,73 @@
     private async Task UpdateOverviewChart()
     {
         await LoadAverageData();
-        await JSRuntime.InvokeVoidAsync("renderAverageWeightChart", averageData, averageViewType);
     }
 
     private async Task UpdateTrendsChart()
     {
         await LoadTrendsData();
-        await JSRuntime.InvokeVoidAsync("renderTrendsChart", trendsData);
-        await JSRuntime.InvokeVoidAsync("renderHourlyChart");
     }
 
-    private async Task UpdateCharts()
+    private ChartOptions overviewChartOptions = new() { YAxisTicks = 1, LineStrokeWidth = 3 };
+    private ChartOptions trendsChartOptions = new() { YAxisTicks = 1, LineStrokeWidth = 2 };
+    private ChartOptions hourlyChartOptions = new() { YAxisTicks = 1, DisableLegend = true };
+
+    private List<ChartSeries> OverviewChartSeries => new()
     {
-        try
+        new ChartSeries
         {
-            if (activeTab == "overview")
-            {
-                await JSRuntime.InvokeVoidAsync("renderAverageWeightChart", averageData, averageViewType);
-            }
-            else if (activeTab == "trends")
-            {
-                await JSRuntime.InvokeVoidAsync("renderTrendsChart", trendsData);
-                await JSRuntime.InvokeVoidAsync("renderHourlyChart");
-            }
+            Name = averageViewType == "weekly" ? "Weekly Average Weight" : "Daily Average Weight",
+            Data = averageData.Select(d => d.AverageWeight).ToArray()
         }
-        catch (Exception ex)
+    };
+
+    private string[] OverviewChartLabels
+    {
+        get
         {
-            Console.WriteLine($"Error updating charts: {ex.Message}");
+            var count = averageData.Count;
+            if (count == 0) return Array.Empty<string>();
+            var step = Math.Max(1, count / 10);
+            return averageData
+                .Select((d, i) => i % step == 0 || i == count - 1 ? d.Label : "")
+                .ToArray();
         }
     }
+
+    private List<ChartSeries> TrendsChartSeries => new()
+    {
+        new ChartSeries
+        {
+            Name = "Average Weight (lbs)",
+            Data = trendsData.Select(d => d.AverageWeight).ToArray()
+        }
+    };
+
+    private string[] TrendsChartLabels
+    {
+        get
+        {
+            var count = trendsData.Count;
+            if (count == 0) return Array.Empty<string>();
+            var step = Math.Max(1, count / 10);
+            return trendsData
+                .Select((d, i) => i % step == 0 || i == count - 1 ? d.Label : "")
+                .ToArray();
+        }
+    }
+
+    private List<ChartSeries> HourlyChartSeries => new()
+    {
+        new ChartSeries
+        {
+            Name = "Average Weight (lbs)",
+            Data = Enumerable.Range(0, 24).Select(h => 0.0).ToArray()
+        }
+    };
+
+    private string[] HourlyChartLabels => Enumerable.Range(0, 24)
+        .Select(h => h % 3 == 0 ? $"{h}:00" : "")
+        .ToArray();
 
     private async Task ExportData()
     {

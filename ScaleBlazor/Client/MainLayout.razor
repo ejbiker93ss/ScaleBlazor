@@ -1,5 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
-<main>
-    @Body
-</main>
+<MudThemeProvider />
+
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <main>
+            @Body
+        </main>
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <div class="error-modal-backdrop">
+            <div class="error-modal">
+                <h2>Unhandled error</h2>
+                <p>@exception.Message</p>
+                <pre>@exception.ToString()</pre>
+                <button class="btn-primary" @onclick="Recover">Dismiss</button>
+            </div>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    private ErrorBoundary? errorBoundary;
+
+    private void Recover()
+    {
+        errorBoundary?.Recover();
+    }
+}

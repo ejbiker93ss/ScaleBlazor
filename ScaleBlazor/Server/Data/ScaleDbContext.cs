@@ -22,6 +22,9 @@ public class ScaleDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Weight).IsRequired();
             entity.Property(e => e.Timestamp).IsRequired();
+            entity.HasIndex(e => e.Timestamp);
+            entity.HasIndex(e => e.PalletId);
+            entity.HasIndex(e => new { e.PalletId, e.Timestamp });
         });
 
         modelBuilder.Entity<Pallet>(entity =>
@@ -32,6 +35,9 @@ public class ScaleDbContext : DbContext
             entity.Property(e => e.ReadingCount).IsRequired();
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.IsCompleted).IsRequired();
+            entity.HasIndex(e => e.PalletId).IsUnique();
+            entity.HasIndex(e => e.CreatedAt);
+            entity.HasIndex(e => new { e.IsCompleted, e.CreatedAt });
         });
 
         modelBuilder.Entity<AppSettings>(entity =>

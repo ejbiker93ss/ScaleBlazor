@@ -34,6 +34,8 @@ public class ScaleReaderService : IDisposable
     private double _autoCaptureThresholdPercent = 5.0;
     private readonly object _rawCaptureLock = new();
     private RawReadCapture? _rawCapture;
+    private double _lastExactWeight = -1;
+    private DateTime _exactWeightSince = DateTime.MinValue;
 
     public event EventHandler<WeightChangedEventArgs>? WeightChanged;
 
@@ -272,6 +274,12 @@ public class ScaleReaderService : IDisposable
 
                 await RefreshSettingsAsync();
 
+                if (Math.Abs(weight - _lastExactWeight) > 0.001)
+                {
+                    _lastExactWeight = weight;
+                    _exactWeightSince = DateTime.UtcNow;
+                }
+
                 if (weight <= ZeroThreshold)
                 {
                     if (_autoReadLocked)
@@ -351,6 +359,44 @@ public class ScaleReaderService : IDisposable
         }
 
         return await capture.Completion.Task;
+    }
+
+    public async Task<string> RunReadingSpeedTestAsync(int readingsToTest = 20)
+    {
+        if (!_isRunning || _serialPort?.IsOpen != true)
+        {
+            return "Scale is not connected or running.";
+        }
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var lines = await CaptureRawLinesAsync(readingsToTest, TimeSpan.FromSeconds(10));
+        stopwatch.Stop();
+
+        if (lines.Count == 0)
+        {
+            return "No readings received within the timeout period.";
+        }
+
+        var avgTimePerReading = stopwatch.ElapsedMilliseconds / (double)lines.Count;
+        var readingsPerSecond = lines.Count / stopwatch.Elapsed.TotalSeconds;
+        var timeToStabilize = avgTimePerReading * StableReadCount;
+
+        var report = new StringBuilder();
+        report.AppendLine($"--- Scale Reading Speed Test ---");
+        report.AppendLine($"Total Readings Captured: {lines.Count}");
+        report.AppendLine($"Total Time Elapsed: {stopwatch.ElapsedMilliseconds} ms");
+        report.AppendLine($"Average Time Per Reading: {avgTimePerReading:F2} ms");
+        report.AppendLine($"Readings Per Second: {readingsPerSecond:F2}");
+        report.AppendLine($"Estimated Time to Collect {StableReadCount} Readings (Stabilization Window): {timeToStabilize:F2} ms");
+
+        if (timeToStabilize < 1000)
+        {
+            report.AppendLine();
+            report.AppendLine("Note: Your stabilization window is under 1 second. This might cause the system to capture a reading before the physical scale has fully settled.");
+            report.AppendLine("Consider increasing 'StableReadCount' (currently 10) or lowering 'AutoCaptureThresholdPercent' (currently 5%).");
+        }
+
+        return report.ToString();
     }
 
     private void RecordRawLine(string line)
@@ -433,6 +479,11 @@ public class ScaleReaderService : IDisposable
         var rangePercent = (maxWeight - minWeight) / avgLast * 100.0;
 
         if (percentDiff > _autoCaptureThresholdPercent || rangePercent > _autoCaptureThresholdPercent)
+        {
+            return false;
+        }
+
+        if ((DateTime.UtcNow - _exactWeightSince).TotalSeconds < 1.5)
         {
             return false;
         }

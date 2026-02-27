@@ -6,6 +6,17 @@
 
 /* 1280x800 landscape tuning */
 @media (max-width: 1280px) and (max-height: 800px) and (min-height: 700px) {
+    body {
+        padding: 10px;
+    }
+
+    .scale-system {
+        max-width: 100%;
+        height: calc(100vh - 20px);
+        display: flex;
+        flex-direction: column;
+    }
+
     .cards-container {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
@@ -13,7 +24,7 @@
     }
 
     .cards-container > .card {
-        height: 500px;
+        max-height: min(450px, 56vh);
     }
 
     .card-header {
@@ -82,7 +93,34 @@
 
     .pallets-list,
     .readings-list {
-        max-height: 450px;
+        max-height: 260px;
+    }
+
+    .timeline-card {
+        flex: 0 1 auto;
+        max-height: 200px;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .timeline-card .card-header {
+        flex-shrink: 0;
+    }
+
+    .timeline-card .card-body {
+        padding: 8px;
+        overflow: hidden;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .timeline-card .mud-chart {
+        height: 100%;
+    }
+
+    .timeline-card .mud-chart svg {
+        max-height: 100%;
     }
 }
 
@@ -119,7 +157,7 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     overflow: hidden;
     transition: transform 0.2s;
-    max-height: 500px;
+    max-height: 420px;
 }
 
 .card.flash-success {
@@ -160,7 +198,7 @@ body {
     gap: 8px;
 }
 
-.card-header .btn-icon-inline {
+.btn-icon-inline {
     background: linear-gradient(135deg, #eef1ff, #dfe4ff);
     color: #3d4ba6;
     border: 1px solid #c7d2ff;
@@ -174,20 +212,27 @@ body {
     box-shadow: 0 2px 6px rgba(79, 97, 199, 0.25);
 }
 
-.card-header .btn-icon-inline.btn-icon-inline-sm {
+.btn-icon-inline.btn-icon-inline-sm {
     padding: 4px 8px;
     font-size: 0.75rem;
     border-radius: 8px;
 }
 
-.card-header .btn-icon-inline:hover {
+.btn-icon-inline.btn-icon-inline-xs {
+    padding: 1px 4px;
+    font-size: 0.55rem;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.btn-icon-inline:hover {
     background: linear-gradient(135deg, #667eea, #6f5cc2);
     color: white;
     border-color: #667eea;
     box-shadow: 0 4px 10px rgba(79, 97, 199, 0.35);
 }
 
-.card-header .btn-icon-inline:active {
+.btn-icon-inline:active {
     transform: translateY(1px);
 }
 
@@ -499,8 +544,62 @@ body {
     overflow: hidden;
 }
 
+.card-body .mud-chart,
+.timeline-card .mud-chart {
+    width: 100%;
+}
+
+.card-body .mud-chart svg,
+.timeline-card .mud-chart svg {
+    overflow: visible;
+}
+
+.mud-chart .mud-chart-legend {
+    display: none;
+}
+
 canvas {
     max-height: 250px;
+}
+
+.card-body canvas {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    display: block;
+}
+
+.timeline-card canvas {
+    min-height: 240px;
+}
+
+@media (max-width: 1100px) and (max-height: 650px) {
+    body {
+        padding: 10px;
+    }
+
+    .cards-container {
+        gap: 12px;
+    }
+
+    .card-header {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .live-reading {
+        font-size: 2rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -553,6 +652,41 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.error-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 2000;
+}
+
+.error-modal {
+    background: #fff;
+    color: #222;
+    max-width: 720px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.error-modal pre {
+    background: #f5f5f7;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0;
+    overflow: auto;
+    font-size: 0.85rem;
+}
 
 /* Small landscape screens (like 5-inch displays in landscape) */
 @media (max-width: 900px) and (max-height: 450px) {

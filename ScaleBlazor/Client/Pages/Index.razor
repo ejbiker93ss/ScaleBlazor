@@ -70,6 +70,9 @@
                         <div class="reading-item">
                             <span class="weight">@reading.Weight.ToString("F2") lbs</span>
                             <span class="time">@reading.Timestamp.ToString("h:mm:ss tt")</span>
+                            <button class="btn-icon-inline btn-icon-inline-xs" @onclick="@(() => DeleteReading(reading.Id))" title="Delete Reading">
+                                <span class="icon-text">Delete</span>
+                            </button>
                         </div>
                     }
                 </div>
@@ -131,7 +134,9 @@
                 }
                 else
                 {
-                    <canvas id="dailyChart"></canvas>
+                    <div style="position: relative; width: 100%; height: 100%;">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
                 }
             </div>
         </div>
@@ -143,6 +148,7 @@
             <span>Today's Weight Timeline</span>
         </div>
         <div class="card-body">
+   
             <canvas id="timelineChart"></canvas>
         </div>
     </div>
@@ -158,7 +164,6 @@
     private List<ScaleReading> todayReadings = new();
     private List<DailyAverage> dailyAverages = new();
     private string dailyAverageView = "list";
-    private bool renderDailyAverageChart;
     private Timer? updateTimer;
     private readonly SemaphoreSlim updateLock = new(1, 1);
     private int readingsPerPallet = 10;
@@ -175,19 +180,34 @@
         .OrderByDescending(day => day.Date)
         .FirstOrDefault();
 
+    private async Task UpdateCharts()
+    {
+        try
+        {
+            if (dailyAverageView == "graph" && dailyAverages.Any())
+            {
+                await JSInterop.UpdateDailyChart(dailyAverages);
+            }
+            await JSInterop.UpdateTimelineChart(todayReadings);
+        }
+        catch
+        {
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await LoadSettings();
         await LoadScaleStatus();
         await LoadData();
-        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
+        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(950));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (renderDailyAverageChart)
+        if (firstRender)
         {
-            renderDailyAverageChart = false;
+            await JSInterop.InitializeSound("/sounds/reading-success.mp3");
             await UpdateCharts();
         }
     }
@@ -228,7 +248,7 @@
             pallets = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=10") ?? new();
             activePallet = await Http.GetFromJsonAsync<Pallet?>("api/pallets/active");
             todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
-            dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=10") ?? new();
+            dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=7") ?? new();
             lastReadingId = lastReadings.FirstOrDefault()?.Id;
 
             await InvokeAsync(StateHasChanged);
@@ -272,6 +292,7 @@
     {
         try
         {
+            await JSInterop.PrimeSound("/sounds/reading-success.mp3");
             isCapturing = true;
             captureMessage = null;
 
@@ -317,7 +338,18 @@
             var latestReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings?count=1");
             var latestReading = latestReadings?.FirstOrDefault();
 
-            if (latestReading != null && latestReading.Id != lastReadingId)
+            if (latestReading == null)
+            {
+                return;
+            }
+
+            if (lastReadingId == null)
+            {
+                lastReadingId = latestReading.Id;
+                return;
+            }
+
+            if (latestReading.Id != lastReadingId)
             {
                 lastReadingId = latestReading.Id;
                 await TriggerFlash();
@@ -338,6 +370,14 @@
         }
 
         flashSuccess = true;
+        try
+        {
+            await JSInterop.PlaySound("/sounds/reading-success.mp3");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error playing sound: {ex.Message}");
+        }
         await InvokeAsync(StateHasChanged);
         await Task.Delay(1200);
         flashSuccess = false;
@@ -357,7 +397,27 @@
         }
     }
 
-    private void SetDailyAverageView(string view)
+    private async Task DeleteReading(int id)
+    {
+        try
+        {
+            var response = await Http.DeleteAsync($"api/scale/readings/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadData();
+            }
+            else
+            {
+                Console.WriteLine($"Failed to delete reading: {response.ReasonPhrase}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting reading: {ex.Message}");
+        }
+    }
+
+    private async Task SetDailyAverageView(string view)
     {
         if (dailyAverageView == view)
         {
@@ -365,23 +425,11 @@
         }
 
         dailyAverageView = view;
-
+        StateHasChanged();
         if (view == "graph")
         {
-            renderDailyAverageChart = true;
-        }
-    }
-
-    private async Task UpdateCharts()
-    {
-        try
-        {
-            await JSInterop.UpdateDailyChart(dailyAverages);
-            await JSInterop.UpdateTimelineChart(todayReadings);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating charts: {ex.Message}");
+            await Task.Delay(50);
+            await UpdateCharts();
         }
     }
 

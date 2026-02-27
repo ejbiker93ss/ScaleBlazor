@@ -1,7 +1,9 @@
 @page "/settings"
 @using ScaleBlazor.Shared
+@using ScaleBlazor.Client.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject JSInterop JSInterop
 
 <div class="scale-system">
     <div class="settings-page">
@@ -129,6 +131,32 @@
 
                 <div class="card">
                     <div class="card-header">
+                        <span class="icon">Kiosk</span>
+                        <span>Kiosk Mode</span>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn-secondary" @onclick="ExitKioskMode" disabled="@isExitingKiosk">
+                            @if (isExitingKiosk)
+                            {
+                                <span>Exiting...</span>
+                            }
+                            else
+                            {
+                                <span>Exit Kiosk Mode</span>
+                            }
+                        </button>
+
+                        @if (kioskMessage != null)
+                        {
+                            <div class="save-message @(kioskSuccess ? "success" : "error")">
+                                @kioskMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                         <span class="icon">Data</span>
                         <span>Data Retention</span>
                     </div>
@@ -180,11 +208,27 @@
                             }
                         </button>
 
+                        <button class="btn-secondary" @onclick="RunSpeedTest" disabled="@isRunningSpeedTest">
+                            @if (isRunningSpeedTest)
+                            {
+                                <span>Testing...</span>
+                            }
+                            else
+                            {
+                                <span>Run Speed Test</span>
+                            }
+                        </button>
+
                         @if (rawMessage != null)
                         {
                             <div class="save-message @(rawSuccess ? "success" : "error")">
                                 @rawMessage
                             </div>
+                        }
+
+                        @if (speedTestResult != null)
+                        {
+                            <pre class="setting-help">@speedTestResult</pre>
                         }
 
                         @if (rawReadings.Count > 0)
@@ -214,6 +258,11 @@
     private string? rawMessage;
     private bool rawSuccess;
     private List<string> rawReadings = new();
+    private bool isExitingKiosk;
+    private string? kioskMessage;
+    private bool kioskSuccess;
+    private bool isRunningSpeedTest;
+    private string? speedTestResult;
 
     protected override async Task OnInitializedAsync()
     {
@@ -343,6 +392,29 @@
         }
     }
 
+    private async Task ExitKioskMode()
+    {
+        isExitingKiosk = true;
+        kioskMessage = null;
+
+        try
+        {
+            await JSInterop.ExitKioskMode();
+            kioskMessage = "Exit kiosk request sent.";
+            kioskSuccess = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error exiting kiosk mode: {ex.Message}");
+            kioskMessage = $"Error exiting kiosk mode: {ex.Message}";
+            kioskSuccess = false;
+        }
+        finally
+        {
+            isExitingKiosk = false;
+        }
+    }
+
     private void GoBack()
     {
         Navigation.NavigateTo("/");
@@ -353,6 +425,7 @@
         isLoadingRaw = true;
         rawMessage = null;
         rawReadings.Clear();
+        speedTestResult = null;
 
         try
         {
@@ -389,6 +462,38 @@
         finally
         {
             isLoadingRaw = false;
+        }
+    }
+
+    private async Task RunSpeedTest()
+    {
+        isRunningSpeedTest = true;
+        speedTestResult = null;
+        rawMessage = null;
+        rawReadings.Clear();
+
+        try
+        {
+            var response = await Http.GetAsync("api/scale/speed-test?count=20");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                speedTestResult = string.IsNullOrWhiteSpace(errorContent)
+                    ? "Failed to run speed test."
+                    : $"Failed to run speed test: {errorContent}";
+                return;
+            }
+
+            speedTestResult = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error running speed test: {ex.Message}");
+            speedTestResult = $"Error running speed test: {ex.Message}";
+        }
+        finally
+        {
+            isRunningSpeedTest = false;
         }
     }
 }
