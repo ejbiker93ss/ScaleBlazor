@@ -91,6 +91,13 @@ public class ScaleController : ControllerBase
         }
     }
 
+    [HttpGet("debug-state")]
+    public async Task<ActionResult<ScaleDebugState>> GetDebugState()
+    {
+        var state = await _scaleService.GetDebugStateAsync();
+        return Ok(state);
+    }
+
     [HttpPost("auto-detect")]
     public async Task<ActionResult<PortDetectionResult>> AutoDetectPort()
     {

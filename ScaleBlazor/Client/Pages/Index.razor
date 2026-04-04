@@ -39,7 +39,6 @@
                 }
                 <div class="live-reading">@currentWeight.ToString("F2")</div>
                 <div class="unit">Lbs</div>
-                <div class="timestamp">@currentTimestamp</div>
                 <button class="btn-primary" @onclick="CaptureReading" disabled="@isCapturing">
                     @if (isCapturing)
                     {
@@ -50,6 +49,17 @@
                         <span>Capture Reading</span>
                     }
                 </button>
+                <div class="metric-small">@GetPrevTenDeltaText()</div>
+                @if (debugMode && debugState != null)
+                {
+                    <div class="metric-small">auto @BoolWord(debugState.AutoCaptureEnabled) | locked @BoolWord(debugState.AutoReadLocked) | ready @BoolWord(debugState.ReadyToAutoCapture)</div>
+                    <div class="metric-small">seen 0 while locked @BoolWord(debugState.SeenZeroWhileLocked)</div>
+                    <div class="metric-small">recent @debugState.RecentCount/@debugState.StableReadCount avg @debugState.RecentAverage.ToString("F2") min @debugState.RecentMin.ToString("F2") max @debugState.RecentMax.ToString("F2")</div>
+                    <div class="metric-small">pct @debugState.PercentDiff.ToString("F2")% | range @debugState.RangePercent.ToString("F2")% | hold @debugState.ExactHoldElapsedMs.ToString("F0")/@debugState.ExactHoldRequiredMs.ToString("F0") ms</div>
+                    <div class="metric-small">saved @debugState.SavedReadingsCount avg @debugState.SavedAverage.ToString("F2") | saved pct @debugState.SavedPercentDiff.ToString("F2")%</div>
+                    <div class="metric-small">checks stable:@BoolWord(debugState.PassStabilityCheck) hold:@BoolWord(debugState.PassHoldCheck) saved:@BoolWord(debugState.PassSavedThresholdCheck)</div>
+                }
+                <div class="timestamp">@currentTimestamp</div>
                 @if (flashSuccess && !string.IsNullOrWhiteSpace(captureMessage))
                 {   
                     <div class="save-message @(captureSuccess ? "success" : "error")">
@@ -61,7 +71,15 @@
 
         <div class="card readings-card">
             <div class="card-header">
-                <span>Last 10 Readings</span>
+                <span>Last @readingsHistoryCount Readings</span>
+                <div class="header-buttons">
+                    <select class="settings-input" value="@readingsHistoryCount" @onchange="OnReadingsCountChanged" title="Select number of readings to display">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
             </div>
             <div class="card-body">
                 <div class="readings-list">
@@ -145,7 +163,18 @@
     <div class="timeline-card">
         <div class="card-header">
             <span class="icon">Timeline</span>
-            <span>Today's Weight Timeline</span>
+            <span>@TimelineTitle</span>
+            <div class="header-buttons timeline-header-buttons">
+                <span class="timeline-current-time">@CurrentDateTimeDisplay</span>
+                <select class="view-selector timeline-range-select" @bind="timelineRangeDays" @bind:after="OnTimelineRangeChanged" title="Select timeline range">
+                    <option value="1">Today</option>
+                    <option value="3">Last 3 Days</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="60">Last 60 Days</option>
+                    <option value="90">Last 90 Days</option>
+                </select>
+            </div>
         </div>
         <div class="card-body">
    
@@ -158,15 +187,21 @@
     private double currentWeight = 0;
     private string currentTimestamp = "";
     private ScaleStatus? scaleStatus;
+    private bool debugMode;
+    private ScaleDebugState? debugState;
     private List<ScaleReading> lastReadings = new();
     private List<Pallet> pallets = new();
     private Pallet? activePallet;
     private List<ScaleReading> todayReadings = new();
+    private List<ScaleReading> timelineReadings = new();
+    private List<DailyAverage> timelineAverages = new();
     private List<DailyAverage> dailyAverages = new();
     private string dailyAverageView = "list";
+    private int timelineRangeDays = 1;
     private Timer? updateTimer;
     private readonly SemaphoreSlim updateLock = new(1, 1);
     private int readingsPerPallet = 10;
+    private int readingsHistoryCount = 10;
     private int? lastReadingId;
     private bool flashSuccess;
     private bool isCapturing;
@@ -179,6 +214,8 @@
     private DailyAverage? LatestDailyAverage => dailyAverages
         .OrderByDescending(day => day.Date)
         .FirstOrDefault();
+    private string TimelineTitle => timelineRangeDays == 1 ? "Today's Weight Timeline" : $"Last {timelineRangeDays} Days Weight Trend";
+    private string CurrentDateTimeDisplay => DateTime.Now.ToString("ddd, MMM d, yyyy h:mm:ss tt");
 
     private async Task UpdateCharts()
     {
@@ -188,7 +225,22 @@
             {
                 await JSInterop.UpdateDailyChart(dailyAverages);
             }
-            await JSInterop.UpdateTimelineChart(todayReadings);
+            var timelineLabels = timelineRangeDays == 1
+                ? timelineReadings.Select(reading => reading.Timestamp.ToString("h:mm tt")).ToArray()
+                : timelineAverages.OrderBy(day => day.Date).Select(day => day.Date.ToString("MMM dd")).ToArray();
+
+            var timelineValues = timelineRangeDays == 1
+                ? timelineReadings.Select(reading => reading.Weight).ToArray()
+                : timelineAverages.OrderBy(day => day.Date).Select(day => day.AverageWeight).ToArray();
+
+            await JSInterop.UpdateTimelineChart(new
+            {
+                labels = timelineLabels,
+                values = timelineValues,
+                seriesName = timelineRangeDays == 1 ? "Weight (lbs)" : "Daily Avg Weight (lbs)",
+                isDaily = timelineRangeDays > 1,
+                showDataLabels = true
+            });
         }
         catch
         {
@@ -200,7 +252,7 @@
         await LoadSettings();
         await LoadScaleStatus();
         await LoadData();
-        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(950));
+        updateTimer = new Timer(async _ => await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(800));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -220,6 +272,7 @@
             if (settings != null)
             {
                 readingsPerPallet = settings.ReadingsPerPallet;
+                debugMode = settings.DebugMode;
             }
         }
         catch (Exception ex)
@@ -244,11 +297,12 @@
     {
         try
         {
-            lastReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings?count=10") ?? new();
+            lastReadings = await Http.GetFromJsonAsync<List<ScaleReading>>($"api/scale/readings?count={readingsHistoryCount}") ?? new();
             pallets = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=10") ?? new();
             activePallet = await Http.GetFromJsonAsync<Pallet?>("api/pallets/active");
             todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
             dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=7") ?? new();
+            await LoadTimelineData();
             lastReadingId = lastReadings.FirstOrDefault()?.Id;
 
             await InvokeAsync(StateHasChanged);
@@ -258,6 +312,70 @@
         {
             Console.WriteLine($"Error loading data: {ex.Message}");
         }
+    }
+
+    private async Task LoadTimelineData()
+    {
+        if (timelineRangeDays == 1)
+        {
+            timelineReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
+            timelineAverages = new();
+            return;
+        }
+
+        timelineAverages = await Http.GetFromJsonAsync<List<DailyAverage>>($"api/scale/daily-averages?days={timelineRangeDays}") ?? new();
+        timelineReadings = new();
+    }
+
+    private async Task OnTimelineRangeChanged()
+    {
+        await LoadTimelineData();
+        await UpdateCharts();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnReadingsCountChanged(ChangeEventArgs args)
+    {
+        if (args.Value is null)
+        {
+            return;
+        }
+
+        if (!int.TryParse(args.Value.ToString(), out var selectedCount))
+        {
+            return;
+        }
+
+        readingsHistoryCount = selectedCount;
+        await LoadData();
+    }
+
+    private string GetPrevTenDeltaText()
+    {
+        if (lastReadings.Count == 0)
+        {
+            return "vs prev 10 saved: n/a";
+        }
+
+        var roundedReadings = lastReadings
+            .Select(reading => Math.Round(reading.Weight, 2, MidpointRounding.AwayFromZero))
+            .ToList();
+
+        var average = roundedReadings.Average();
+        if (average == 0)
+        {
+            return "vs prev 10 saved: n/a";
+        }
+
+        var roundedCurrentWeight = Math.Round(currentWeight, 2, MidpointRounding.AwayFromZero);
+        var percent = (roundedCurrentWeight - average) / average * 100.0;
+        var sign = percent >= 0 ? "+" : string.Empty;
+        return $"vs prev 10 saved: {sign}{percent:F1}%";
+    }
+
+    private static string BoolWord(bool value)
+    {
+        return value ? "yes" : "no";
     }
 
     private async Task UpdateLiveReading()
@@ -274,6 +392,12 @@
             {
                 currentWeight = reading.Weight;
                 currentTimestamp = reading.Timestamp.ToString("h:mm:ss tt");
+
+                if (debugMode)
+                {
+                    debugState = await Http.GetFromJsonAsync<ScaleDebugState>("api/scale/debug-state");
+                }
+
                 await CheckForNewReading();
                 await InvokeAsync(StateHasChanged);
             }

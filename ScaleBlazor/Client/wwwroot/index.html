@@ -27,6 +27,46 @@
         let readingSuccessAudio = null;
         let readingSuccessUnlocked = false;
 
+		const timelineDataLabelPlugin = {
+			id: 'timelineDataLabels',
+			afterDatasetsDraw(chart, args, pluginOptions) {
+				if (!pluginOptions || pluginOptions.display === false) {
+					return;
+				}
+
+				const { ctx } = chart;
+				const dataset = chart.data.datasets[0];
+				const meta = chart.getDatasetMeta(0);
+				if (!dataset || !meta || !meta.data) {
+					return;
+				}
+
+				const step = pluginOptions.step && pluginOptions.step > 0 ? pluginOptions.step : 1;
+				const formatter = pluginOptions.formatter || (value => value);
+
+				ctx.save();
+				ctx.fillStyle = pluginOptions.color || '#345';
+				ctx.font = pluginOptions.font || '600 11px Segoe UI';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'bottom';
+
+				meta.data.forEach((point, index) => {
+					if (index % step !== 0 && index !== meta.data.length - 1) {
+						return;
+					}
+
+					const rawValue = dataset.data[index];
+					if (rawValue === null || rawValue === undefined) {
+						return;
+					}
+
+					ctx.fillText(formatter(rawValue), point.x, point.y - 6);
+				});
+
+				ctx.restore();
+			}
+		};
+
         const getReadingSuccessAudio = (url) => {
             if (!readingSuccessAudio) {
                 readingSuccessAudio = new Audio(url);
@@ -80,6 +120,9 @@
             },
             _dailyChart: null,
             _timelineChart: null,
+            _reportOverviewChart: null,
+            _reportTrendsChart: null,
+            _reportHourlyChart: null,
             updateDailyChart: function (data) {
                 const ctx = document.getElementById('dailyChart');
                 if (!ctx) return;
@@ -106,21 +149,181 @@
             updateTimelineChart: function (data) {
                 const ctx = document.getElementById('timelineChart');
                 if (!ctx) return;
-                const labels = data.map(d => { const date = new Date(d.timestamp); return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); });
-                const values = data.map(d => d.weight);
+
+                const toArray = function (value) {
+					if (Array.isArray(value)) {
+						return value;
+					}
+
+					if (!value) {
+						return [];
+					}
+
+					if (typeof value === 'object') {
+						return Object.keys(value)
+							.filter(key => !Number.isNaN(Number(key)))
+							.sort((a, b) => Number(a) - Number(b))
+							.map(key => value[key]);
+					}
+
+					return [];
+				};
+
+				const isArrayInput = Array.isArray(data);
+				const labels = isArrayInput
+					? data.map(d => {
+						const date = new Date(d.timestamp);
+						return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+					})
+					: toArray(data?.labels);
+				const values = (isArrayInput
+					? data.map(d => d.weight)
+					: toArray(data?.values))
+					.map(value => Number(value))
+					.filter(value => !Number.isNaN(value));
+				const seriesName = isArrayInput ? 'Weight (lbs)' : (data?.seriesName ?? 'Weight (lbs)');
+				const isDaily = isArrayInput ? false : !!data?.isDaily;
+				const showDataLabels = isArrayInput ? true : data?.showDataLabels !== false;
+				const safeLabels = labels.slice(0, values.length);
+
                 if (this._timelineChart) this._timelineChart.destroy();
                 const minValue = values.length > 0 ? Math.min(...values) : 35;
                 const maxValue = values.length > 0 ? Math.max(...values) : 55;
                 const padding = (maxValue - minValue) * 0.1 || 1;
                 const isSmall = window.innerWidth <= 900 && window.innerHeight <= 450;
+                const labelStep = values.length > (isSmall ? 6 : 14) ? Math.ceil(values.length / (isSmall ? 6 : 14)) : 1;
+
                 this._timelineChart = new Chart(ctx, {
                     type: 'line',
-                    data: { labels: labels, datasets: [{ data: values, borderColor: '#4FC3F7', backgroundColor: 'rgba(79, 195, 247, 0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#4FC3F7', pointBorderColor: '#4FC3F7', pointRadius: isSmall ? 1 : 4, borderWidth: isSmall ? 1 : 2 }] },
+                    plugins: [timelineDataLabelPlugin],
+                    data: { labels: safeLabels, datasets: [{ label: seriesName, data: values, borderColor: '#4FC3F7', backgroundColor: 'rgba(79, 195, 247, 0.1)', tension: isDaily ? 0.25 : 0.4, fill: true, pointBackgroundColor: '#4FC3F7', pointBorderColor: '#4FC3F7', pointRadius: isSmall ? 2 : 4, borderWidth: isSmall ? 1 : 2 }] },
                     options: {
                         responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, x: { grid: { color: '#e0e0e0', display: !isSmall }, ticks: { font: { size: isSmall ? 5 : 11 }, maxRotation: isSmall ? 45 : 0, minRotation: isSmall ? 45 : 0 } } },
+                        plugins: {
+                            legend: { display: false },
+							timelineDataLabels: {
+								display: showDataLabels,
+								step: labelStep,
+								color: '#35516b',
+								font: isSmall ? '600 8px Segoe UI' : '600 11px Segoe UI',
+								formatter: function (value) { return Number(value).toFixed(2); }
+							},
+							tooltip: {
+								callbacks: {
+									label: function (context) {
+										return `${seriesName}: ${context.parsed.y.toFixed(2)} lbs`;
+									}
+								}
+							}
+						},
+						scales: { y: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, x: { grid: { color: '#e0e0e0', display: !isSmall }, ticks: { autoSkip: true, maxTicksLimit: isDaily ? (isSmall ? 6 : 12) : undefined, font: { size: isSmall ? 5 : 11 }, maxRotation: isSmall ? 45 : 0, minRotation: isSmall ? 45 : 0 } } },
                         layout: { padding: isSmall ? 0 : 10 }
+                    }
+                });
+            },
+            updateReportOverviewChart: function (data) {
+                const ctx = document.getElementById('overviewReportChart');
+                if (!ctx) return;
+
+                const labels = data?.labels ?? [];
+                const values = data?.values ?? [];
+                const seriesName = data?.seriesName ?? 'Average Weight';
+
+                if (this._reportOverviewChart) this._reportOverviewChart.destroy();
+
+                this._reportOverviewChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: seriesName,
+                            data: values,
+                            borderColor: '#2d72f3',
+                            backgroundColor: 'rgba(45, 114, 243, 0.12)',
+                            fill: false,
+                            tension: 0.25,
+                            pointRadius: 2,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: {
+                            x: { grid: { color: '#e9ecef' } },
+                            y: { ticks: { precision: 2 }, grid: { color: '#e9ecef' } }
+                        }
+                    }
+                });
+            },
+            updateReportTrendsChart: function (data) {
+                const ctx = document.getElementById('trendsReportChart');
+                if (!ctx) return;
+
+                const labels = data?.labels ?? [];
+                const values = data?.values ?? [];
+                const seriesName = data?.seriesName ?? 'Average Weight (lbs)';
+
+                if (this._reportTrendsChart) this._reportTrendsChart.destroy();
+
+                this._reportTrendsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: seriesName,
+                            data: values,
+                            borderColor: '#2d72f3',
+                            backgroundColor: 'rgba(45, 114, 243, 0.12)',
+                            fill: false,
+                            tension: 0.25,
+                            pointRadius: 2,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: {
+                            x: { grid: { color: '#e9ecef' } },
+                            y: { ticks: { precision: 2 }, grid: { color: '#e9ecef' } }
+                        }
+                    }
+                });
+            },
+            updateReportHourlyChart: function (data) {
+                const ctx = document.getElementById('hourlyReportChart');
+                if (!ctx) return;
+
+                const labels = data?.labels ?? [];
+                const values = data?.values ?? [];
+                const seriesName = data?.seriesName ?? 'Average Weight (lbs)';
+
+                if (this._reportHourlyChart) this._reportHourlyChart.destroy();
+
+                this._reportHourlyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: seriesName,
+                            data: values,
+                            backgroundColor: 'rgba(45, 114, 243, 0.65)',
+                            borderColor: '#2d72f3',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: { beginAtZero: true, grid: { color: '#e9ecef' } }
+                        }
                     }
                 });
             }
@@ -134,6 +337,24 @@
             link.download = filename;
             link.click();
             window.URL.revokeObjectURL(link.href);
+        };
+
+        window.updateReportOverviewChart = function (data) {
+            if (window.JSInterop && typeof window.JSInterop.updateReportOverviewChart === 'function') {
+                window.JSInterop.updateReportOverviewChart(data);
+            }
+        };
+
+        window.updateReportTrendsChart = function (data) {
+            if (window.JSInterop && typeof window.JSInterop.updateReportTrendsChart === 'function') {
+                window.JSInterop.updateReportTrendsChart(data);
+            }
+        };
+
+        window.updateReportHourlyChart = function (data) {
+            if (window.JSInterop && typeof window.JSInterop.updateReportHourlyChart === 'function') {
+                window.JSInterop.updateReportHourlyChart(data);
+            }
         };
     </script>
     <script src="lib/mudblazor/MudBlazor.min.js"></script>

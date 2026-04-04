@@ -1,30 +1,41 @@
 @page "/reports"
 @using ScaleBlazor.Shared
+@using ScaleBlazor.Client.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject JSInterop ChartInterop
 
 <div class="scale-system">
     <div class="reports-page">
-        <div class="reports-header">
+        <div class="reports-top-row">
             <h1 class="title">Analytics & Reports</h1>
-            <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
+            <div class="reports-tabs">
+                <button class="tab-btn @(activeTab == "overview" ? "active" : "")" @onclick="@(() => SetActiveTab("overview"))">
+                    Overview
+                </button>
+                <button class="tab-btn @(activeTab == "trends" ? "active" : "")" @onclick="@(() => SetActiveTab("trends"))">
+                    Trends
+                </button>
+                <button class="tab-btn @(activeTab == "pallets" ? "active" : "")" @onclick="@(() => SetActiveTab("pallets"))">
+                    Pallet Stats
+                </button>
+                <button class="tab-btn @(activeTab == "export" ? "active" : "")" @onclick="@(() => SetActiveTab("export"))">
+                    Export Data
+                </button>
+            </div>
+            <div class="tabs-filter">
+                <select class="date-range-select" @bind="activePreset" @bind:after="OnPresetChanged">
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="quarter">This Quarter</option>
+                    <option value="year">This Year</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+            <button class="btn-back reports-back" @onclick="GoBack" title="Back to Dashboard">
                 <span>← Back</span>
-            </button>
-        </div>
-
-        <div class="reports-tabs">
-            <button class="tab-btn @(activeTab == "overview" ? "active" : "")" @onclick="@(() => SetActiveTab("overview"))">
-                Overview
-            </button>
-            <button class="tab-btn @(activeTab == "trends" ? "active" : "")" @onclick="@(() => SetActiveTab("trends"))">
-                Trends
-            </button>
-            <button class="tab-btn @(activeTab == "pallets" ? "active" : "")" @onclick="@(() => SetActiveTab("pallets"))">
-                Pallet Stats
-            </button>
-            <button class="tab-btn @(activeTab == "export" ? "active" : "")" @onclick="@(() => SetActiveTab("export"))">
-                Export Data
             </button>
         </div>
 
@@ -34,22 +45,18 @@
                 <div class="overview-section">
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon">Readings</div>
                             <div class="stat-value">@totalReadings</div>
                             <div class="stat-label">Total Readings</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">Pallets</div>
                             <div class="stat-value">@totalPallets</div>
                             <div class="stat-label">Total Pallets</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">Average</div>
                             <div class="stat-value">@averageWeight.ToString("F2")</div>
                             <div class="stat-label">Avg Weight (lbs)</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">Today</div>
                             <div class="stat-value">@todayReadings</div>
                             <div class="stat-label">Today's Readings</div>
                         </div>
@@ -67,11 +74,9 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <MudChart ChartType="ChartType.Line"
-                                      ChartSeries="@OverviewChartSeries"
-                                      XAxisLabels="@OverviewChartLabels"
-                                      Width="100%" Height="300px"
-                                      ChartOptions="@overviewChartOptions" />
+                            <div class="report-chart-container">
+                                <canvas id="overviewReportChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -83,25 +88,11 @@
                         <div class="card-header">
                             <span class="icon">Trends</span>
                             <span>Weight Trends Over Time</span>
-                            <div class="header-buttons">
-                                <label class="date-label">From:</label>
-                                <input type="date" 
-                                       class="date-input" 
-                                       @bind="trendsStartDate" 
-                                       @bind:after="UpdateTrendsChart"
-                                       max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(30))">30d</button>
-                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(90))">90d</button>
-                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(180))">6m</button>
-                                <button class="btn-preset" @onclick="@(() => SetTrendsPreset(365))">1y</button>
-                            </div>
                         </div>
                         <div class="card-body">
-                            <MudChart ChartType="ChartType.Line"
-                                      ChartSeries="@TrendsChartSeries"
-                                      XAxisLabels="@TrendsChartLabels"
-                                      Width="100%" Height="300px"
-                                      ChartOptions="@trendsChartOptions" />
+                            <div class="report-chart-container">
+                                <canvas id="trendsReportChart"></canvas>
+                            </div>
                         </div>
                     </div>
 
@@ -111,11 +102,9 @@
                             <span>Hourly Average - Today</span>
                         </div>
                         <div class="card-body">
-                            <MudChart ChartType="ChartType.Bar"
-                                      ChartSeries="@HourlyChartSeries"
-                                      XAxisLabels="@HourlyChartLabels"
-                                      Width="100%" Height="300px"
-                                      ChartOptions="@hourlyChartOptions" />
+                            <div class="report-chart-container">
+                                <canvas id="hourlyReportChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +229,6 @@
 @code {
     private string activeTab = "overview";
     private string averageViewType = "daily";
-    private DateTime trendsStartDate = DateTime.Now.AddDays(-30);
     private List<AverageData> trendsData = new();
     private int totalReadings = 0;
     private int totalPallets = 0;
@@ -249,36 +237,93 @@
     private List<Pallet> palletStats = new();
     private List<AverageData> averageData = new();
 
-    private DateTime startDate = DateTime.Now.AddDays(-30);
+    private DateTime filterStartDate = new DateTime(DateTime.Now.Year, 1, 1);
+    private DateTime filterEndDate = DateTime.Now;
+    private string activePreset = "year";
+
+    private DateTime startDate = new DateTime(DateTime.Now.Year, 1, 1);
     private DateTime endDate = DateTime.Now;
     private string exportType = "readings";
     private bool isExporting = false;
     private string? exportMessage;
     private bool exportSuccess;
+    private bool shouldRenderCharts;
 
     protected override async Task OnInitializedAsync()
+    {
+        await RefreshAllData();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender || shouldRenderCharts)
+        {
+            shouldRenderCharts = false;
+            await RenderCharts();
+        }
+    }
+
+    private Task SetActiveTab(string tab)
+    {
+        activeTab = tab;
+        shouldRenderCharts = true;
+        return Task.CompletedTask;
+    }
+
+    private async Task OnPresetChanged()
+    {
+        var now = DateTime.Now;
+
+        switch (activePreset)
+        {
+            case "today":
+                filterStartDate = now.Date;
+                filterEndDate = now;
+                break;
+            case "week":
+                filterStartDate = now.Date.AddDays(-(int)now.DayOfWeek);
+                filterEndDate = now;
+                break;
+            case "month":
+                filterStartDate = new DateTime(now.Year, now.Month, 1);
+                filterEndDate = now;
+                break;
+            case "quarter":
+                var quarterMonth = ((now.Month - 1) / 3) * 3 + 1;
+                filterStartDate = new DateTime(now.Year, quarterMonth, 1);
+                filterEndDate = now;
+                break;
+            case "year":
+                filterStartDate = new DateTime(now.Year, 1, 1);
+                filterEndDate = now;
+                break;
+            case "all":
+                filterStartDate = new DateTime(2000, 1, 1);
+                filterEndDate = now;
+                break;
+        }
+
+        startDate = filterStartDate;
+        endDate = filterEndDate;
+        await RefreshAllData();
+    }
+
+    private async Task RefreshAllData()
     {
         await LoadStatistics();
         await LoadAverageData();
         await LoadTrendsData();
+        await LoadPalletStats();
+        shouldRenderCharts = true;
     }
 
-    private void SetActiveTab(string tab)
-    {
-        activeTab = tab;
-    }
-
-    private async Task SetTrendsPreset(int days)
-    {
-        trendsStartDate = DateTime.Now.AddDays(-days);
-        await UpdateTrendsChart();
-    }
+    private string DateQueryParams => $"startDate={filterStartDate:yyyy-MM-dd}&endDate={filterEndDate:yyyy-MM-dd}";
 
     private async Task LoadStatistics()
     {
         try
         {
-            var stats = await Http.GetFromJsonAsync<ReportStatistics>("api/reports/statistics");
+            var stats = await Http.GetFromJsonAsync<ReportStatistics>($"api/reports/statistics?{DateQueryParams}");
             if (stats != null)
             {
                 totalReadings = stats.TotalReadings;
@@ -286,8 +331,6 @@
                 averageWeight = stats.AverageWeight;
                 todayReadings = stats.TodayReadings;
             }
-
-            palletStats = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=50") ?? new();
         }
         catch (Exception ex)
         {
@@ -299,10 +342,8 @@
     {
         try
         {
-            var url = averageViewType == "weekly" 
-                ? "api/reports/average-weekly?weeks=12" 
-                : "api/reports/average-daily?days=30";
-
+            var endpoint = averageViewType == "weekly" ? "average-weekly" : "average-daily";
+            var url = $"api/reports/{endpoint}?{DateQueryParams}";
             averageData = await Http.GetFromJsonAsync<List<AverageData>>(url) ?? new();
         }
         catch (Exception ex)
@@ -315,8 +356,7 @@
     {
         try
         {
-            var daysDiff = (int)(DateTime.Now - trendsStartDate).TotalDays;
-            var url = $"api/reports/trends-daily?days={daysDiff}";
+            var url = $"api/reports/trends-daily?{DateQueryParams}";
             trendsData = await Http.GetFromJsonAsync<List<AverageData>>(url) ?? new();
         }
         catch (Exception ex)
@@ -325,76 +365,54 @@
         }
     }
 
+    private async Task LoadPalletStats()
+    {
+        try
+        {
+            palletStats = await Http.GetFromJsonAsync<List<Pallet>>($"api/reports/pallets?{DateQueryParams}") ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading pallet stats: {ex.Message}");
+        }
+    }
+
     private async Task UpdateOverviewChart()
     {
         await LoadAverageData();
+        shouldRenderCharts = true;
     }
 
-    private async Task UpdateTrendsChart()
+    private async Task RenderCharts()
     {
-        await LoadTrendsData();
-    }
-
-    private ChartOptions overviewChartOptions = new() { YAxisTicks = 1, LineStrokeWidth = 3 };
-    private ChartOptions trendsChartOptions = new() { YAxisTicks = 1, LineStrokeWidth = 2 };
-    private ChartOptions hourlyChartOptions = new() { YAxisTicks = 1, DisableLegend = true };
-
-    private List<ChartSeries> OverviewChartSeries => new()
-    {
-        new ChartSeries
+        try
         {
-            Name = averageViewType == "weekly" ? "Weekly Average Weight" : "Daily Average Weight",
-            Data = averageData.Select(d => d.AverageWeight).ToArray()
+            await ChartInterop.UpdateReportOverviewChart(new
+            {
+                labels = averageData.Select(d => d.Label).ToArray(),
+                values = averageData.Select(d => d.AverageWeight).ToArray(),
+                seriesName = averageViewType == "weekly" ? "Weekly Average Weight" : "Daily Average Weight"
+            });
+
+            await ChartInterop.UpdateReportTrendsChart(new
+            {
+                labels = trendsData.Select(d => d.Label).ToArray(),
+                values = trendsData.Select(d => d.AverageWeight).ToArray(),
+                seriesName = "Average Weight (lbs)"
+            });
+
+            await ChartInterop.UpdateReportHourlyChart(new
+            {
+                labels = Enumerable.Range(0, 24).Select(h => h % 3 == 0 ? $"{h}:00" : "").ToArray(),
+                values = Enumerable.Repeat(0.0, 24).ToArray(),
+                seriesName = "Average Weight (lbs)"
+            });
         }
-    };
-
-    private string[] OverviewChartLabels
-    {
-        get
+        catch (Exception ex)
         {
-            var count = averageData.Count;
-            if (count == 0) return Array.Empty<string>();
-            var step = Math.Max(1, count / 10);
-            return averageData
-                .Select((d, i) => i % step == 0 || i == count - 1 ? d.Label : "")
-                .ToArray();
-        }
-    }
-
-    private List<ChartSeries> TrendsChartSeries => new()
-    {
-        new ChartSeries
-        {
-            Name = "Average Weight (lbs)",
-            Data = trendsData.Select(d => d.AverageWeight).ToArray()
-        }
-    };
-
-    private string[] TrendsChartLabels
-    {
-        get
-        {
-            var count = trendsData.Count;
-            if (count == 0) return Array.Empty<string>();
-            var step = Math.Max(1, count / 10);
-            return trendsData
-                .Select((d, i) => i % step == 0 || i == count - 1 ? d.Label : "")
-                .ToArray();
+            Console.WriteLine($"Error rendering report charts: {ex.Message}");
         }
     }
-
-    private List<ChartSeries> HourlyChartSeries => new()
-    {
-        new ChartSeries
-        {
-            Name = "Average Weight (lbs)",
-            Data = Enumerable.Range(0, 24).Select(h => 0.0).ToArray()
-        }
-    };
-
-    private string[] HourlyChartLabels => Enumerable.Range(0, 24)
-        .Select(h => h % 3 == 0 ? $"{h}:00" : "")
-        .ToArray();
 
     private async Task ExportData()
     {

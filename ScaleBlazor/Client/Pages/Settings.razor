@@ -9,10 +9,27 @@
     <div class="settings-page">
         <div class="settings-header">
             <h1 class="title">Settings</h1>
+            <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
+                @if (isSaving)
+                {
+                    <span>Saving...</span>
+                }
+                else
+                {
+                    <span>Save Settings</span>
+                }
+            </button>
             <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
                 <span>← Back</span>
             </button>
         </div>
+
+        @if (saveMessage != null)
+        {
+            <div class="save-message @(saveSuccess ? "success" : "error")">
+                @saveMessage
+            </div>
+        }
 
         @if (settings == null)
         {
@@ -71,6 +88,14 @@
                                 </small>
                             </div>
                         }
+
+                        <div class="setting-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox" @bind="settings.DebugMode" />
+                                <span>Enable Debug Mode</span>
+                            </label>
+                            <small class="setting-help">Show live auto-capture gate values next to the dashboard live reading.</small>
+                        </div>
                     </div>
                 </div>
 
@@ -107,26 +132,6 @@
                             </div>
                         }
                     </div>
-                </div>
-
-                <div class="settings-actions">
-                    <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
-                        @if (isSaving)
-                        {
-                            <span>Saving...</span>
-                        }
-                        else
-                        {
-                            <span>Save Settings</span>
-                        }
-                    </button>
-
-                    @if (saveMessage != null)
-                    {
-                        <div class="save-message @(saveSuccess ? "success" : "error")">
-                            @saveMessage
-                        </div>
-                    }
                 </div>
 
                 <div class="card">

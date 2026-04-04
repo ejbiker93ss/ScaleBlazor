@@ -36,8 +36,44 @@ public class JSInterop
         await _jsRuntime.InvokeVoidAsync("JSInterop.updateDailyChart", data);
     }
 
-    public async Task UpdateTimelineChart<T>(IEnumerable<T> data)
+    public async Task UpdateTimelineChart(object data)
     {
         await _jsRuntime.InvokeVoidAsync("JSInterop.updateTimelineChart", data);
+    }
+
+    public async Task UpdateReportOverviewChart(object data)
+    {
+        try
+        {
+            await _jsRuntime.InvokeVoidAsync("updateReportOverviewChart", data);
+        }
+        catch (JSException)
+        {
+            await _jsRuntime.InvokeVoidAsync("JSInterop.updateReportOverviewChart", data);
+        }
+    }
+
+    public async Task UpdateReportTrendsChart(object data)
+    {
+        try
+        {
+            await _jsRuntime.InvokeVoidAsync("updateReportTrendsChart", data);
+        }
+        catch (JSException)
+        {
+            await _jsRuntime.InvokeVoidAsync("JSInterop.updateReportTrendsChart", data);
+        }
+    }
+
+    public async Task UpdateReportHourlyChart(object data)
+    {
+        try
+        {
+            await _jsRuntime.InvokeVoidAsync("updateReportHourlyChart", data);
+        }
+        catch (JSException)
+        {
+            await _jsRuntime.InvokeVoidAsync("JSInterop.updateReportHourlyChart", data);
+        }
     }
 }

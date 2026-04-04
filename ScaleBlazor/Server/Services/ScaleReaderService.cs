@@ -14,8 +14,9 @@ namespace ScaleBlazor.Server.Services;
 public class ScaleReaderService : IDisposable
 {
     private const int StableReadCount = 10;
-    private const int HistoryReadCount = 10;        
     private const double ZeroThreshold = 0.01;
+    private const int DefaultExactReadingHoldMilliseconds = 850;
+    private const int ExactReadingDecimals = 2;
     private static readonly TimeSpan ReconnectDelay = TimeSpan.FromSeconds(5);
 
     private SerialPort? _serialPort;
@@ -27,11 +28,19 @@ public class ScaleReaderService : IDisposable
     private Task? _readTask;
     private CancellationTokenSource _cancellationTokenSource;
     private readonly Queue<double> _recentWeights = new();
+    private readonly Queue<double> _recentSavedWeights = new();
     private bool _autoReadLocked = true;
     private DateTime _lastSettingsRefresh = DateTime.MinValue;
     private DateTime _lastReconnectAttempt = DateTime.MinValue;
     private bool _autoCaptureEnabled;
     private double _autoCaptureThresholdPercent = 5.0;
+    private TimeSpan _exactReadingHoldTime = TimeSpan.FromMilliseconds(DefaultExactReadingHoldMilliseconds);
+    private bool _seenZeroWhileLocked;
+    private bool _savedWeightsInitialized;
+    private double _savedBaselineAverage;
+    private double _savedBaselinePercentDiff;
+    private bool _passSavedThresholdCheck = true;
+    private readonly object _stateLock = new();
     private readonly object _rawCaptureLock = new();
     private RawReadCapture? _rawCapture;
     private double _lastExactWeight = -1;
@@ -269,30 +278,50 @@ public class ScaleReaderService : IDisposable
             if (!double.IsNaN(weight))
             {
                 // Double the weight to get correct case weight
-                var originalWeight = weight;
                 weight *= 2;
 
                 await RefreshSettingsAsync();
 
-                if (Math.Abs(weight - _lastExactWeight) > 0.001)
+                var roundedWeight = Math.Round(weight, ExactReadingDecimals, MidpointRounding.AwayFromZero);
+                lock (_stateLock)
                 {
-                    _lastExactWeight = weight;
-                    _exactWeightSince = DateTime.UtcNow;
+                    if (roundedWeight != _lastExactWeight)
+                    {
+                        _lastExactWeight = roundedWeight;
+                        _exactWeightSince = DateTime.UtcNow;
+                    }
                 }
 
                 if (weight <= ZeroThreshold)
                 {
-                    if (_autoReadLocked)
+                    lock (_stateLock)
                     {
-                        _autoReadLocked = false;
+                        if (_autoReadLocked)
+                        {
+                            _seenZeroWhileLocked = true;
+                        }
+
+                        _recentWeights.Clear();
                     }
 
-                    _recentWeights.Clear();
                     UpdateCurrentWeight(weight);
                     return;
                 }
 
-                if (_autoReadLocked)
+                var isLocked = false;
+                lock (_stateLock)
+                {
+                    if (_autoReadLocked && _seenZeroWhileLocked)
+                    {
+                        _autoReadLocked = false;
+                        _seenZeroWhileLocked = false;
+                        _recentWeights.Clear();
+                    }
+
+                    isLocked = _autoReadLocked;
+                }
+
+                if (isLocked)
                 {
                     UpdateCurrentWeight(weight);
                     return;
@@ -300,10 +329,22 @@ public class ScaleReaderService : IDisposable
 
                 AddReading(weight);
 
-                if (_autoCaptureEnabled && ShouldAutoCapture(out var stableWeight) && await ShouldCaptureFromHistoryAsync(stableWeight))
+                if (_autoCaptureEnabled)
                 {
-                    _autoReadLocked = true;
-                    _recentWeights.Clear();
+                    var (shouldAutoCapture, stableWeight) = await ShouldAutoCaptureAsync();
+                    if (!shouldAutoCapture)
+                    {
+                        UpdateCurrentWeight(weight);
+                        return;
+                    }
+
+                    lock (_stateLock)
+                    {
+                        _autoReadLocked = true;
+                        _seenZeroWhileLocked = false;
+                        _recentWeights.Clear();
+                    }
+
                     await AutoCaptureReadingAsync(stableWeight);
                     UpdateCurrentWeight(stableWeight);
                     return;
@@ -446,29 +487,39 @@ public class ScaleReaderService : IDisposable
 
     private void AddReading(double weight)
     {
-        _recentWeights.Enqueue(weight);
-        while (_recentWeights.Count > StableReadCount)
+        lock (_stateLock)
         {
-            _recentWeights.Dequeue();
+            _recentWeights.Enqueue(weight);
+            while (_recentWeights.Count > StableReadCount)
+            {
+                _recentWeights.Dequeue();
+            }
         }
     }
 
-    private bool ShouldAutoCapture(out double stableWeight)
+    private async Task<(bool ShouldAutoCapture, double StableWeight)> ShouldAutoCaptureAsync()
     {
-        stableWeight = 0;
+        var stableWeight = 0d;
 
-        if (_recentWeights.Count < StableReadCount)
+        double[] weights;
+        DateTime exactWeightSince;
+        lock (_stateLock)
         {
-            return false;
+            weights = _recentWeights.ToArray();
+            exactWeightSince = _exactWeightSince;
         }
 
-        var weights = _recentWeights.ToArray();
+        if (weights.Length < StableReadCount)
+        {
+            return (false, stableWeight);
+        }
+
         var lastReadings = weights[^StableReadCount..];
         var avgLast = lastReadings.Average();
 
         if (avgLast <= 0)
         {
-            return false;
+            return (false, stableWeight);
         }
 
         var currentWeight = lastReadings[^1];
@@ -476,57 +527,119 @@ public class ScaleReaderService : IDisposable
         var percentDiff = diff / avgLast * 100.0;
         var minWeight = lastReadings.Min();
         var maxWeight = lastReadings.Max();
+
         var rangePercent = (maxWeight - minWeight) / avgLast * 100.0;
 
         if (percentDiff > _autoCaptureThresholdPercent || rangePercent > _autoCaptureThresholdPercent)
         {
-            return false;
+            return (false, stableWeight);
         }
 
-        if ((DateTime.UtcNow - _exactWeightSince).TotalSeconds < 1.5)
+        if (DateTime.UtcNow - exactWeightSince < _exactReadingHoldTime)
         {
-            return false;
+            return (false, stableWeight);
+        }
+
+        var savedReadings = await GetRecentSavedReadingsAsync();
+        if (savedReadings.Count > 0)
+        {
+            var savedAverage = savedReadings.Average();
+            var savedBaseline = savedAverage >= 0 ? savedAverage : -savedAverage;
+
+            if (savedBaseline > ZeroThreshold)
+            {
+                var savedDiff = avgLast >= savedAverage ? avgLast - savedAverage : savedAverage - avgLast;
+                var savedPercentDiff = savedDiff / savedBaseline * 100.0;
+                var passSavedThresholdCheck = savedPercentDiff <= _autoCaptureThresholdPercent;
+
+                lock (_stateLock)
+                {
+                    _savedBaselineAverage = savedAverage;
+                    _savedBaselinePercentDiff = savedPercentDiff;
+                    _passSavedThresholdCheck = passSavedThresholdCheck;
+                }
+
+                if (!passSavedThresholdCheck)
+                {
+                    return (false, stableWeight);
+                }
+            }
+        }
+        else
+        {
+            lock (_stateLock)
+            {
+                _savedBaselineAverage = 0;
+                _savedBaselinePercentDiff = 0;
+                _passSavedThresholdCheck = true;
+            }
         }
 
         stableWeight = avgLast;
-        return true;
+        return (true, stableWeight);
     }
 
-    private async Task<bool> ShouldCaptureFromHistoryAsync(double stableWeight)
+    private async Task<IReadOnlyList<double>> GetRecentSavedReadingsAsync()
     {
+        lock (_stateLock)
+        {
+            if (_recentSavedWeights.Count > 0)
+            {
+                return _recentSavedWeights.ToArray();
+            }
+
+            if (_savedWeightsInitialized)
+            {
+                return Array.Empty<double>();
+            }
+        }
+
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ScaleDbContext>();
-
-        var recentWeights = await context.ScaleReadings
+        var recentSaved = await context.ScaleReadings
             .AsNoTracking()
             .OrderByDescending(r => r.Timestamp)
-            .Take(HistoryReadCount)
+            .Take(StableReadCount)
             .Select(r => r.Weight)
             .ToListAsync();
 
-        if (recentWeights.Count == 0)
+        lock (_stateLock)
         {
-            return true;
+            if (_recentSavedWeights.Count == 0 && recentSaved.Count > 0)
+            {
+                for (int i = recentSaved.Count - 1; i >= 0; i--)
+                {
+                    _recentSavedWeights.Enqueue(recentSaved[i]);
+                }
+            }
+
+            _savedWeightsInitialized = true;
+            return _recentSavedWeights.ToArray();
         }
+    }
 
-        var avgLast = recentWeights.Average();
-        var baseline = avgLast >= 0 ? avgLast : -avgLast;
-
-        if (baseline <= ZeroThreshold)
+    private void AddSavedReading(double weight)
+    {
+        lock (_stateLock)
         {
-            return true;
+            _recentSavedWeights.Enqueue(weight);
+            while (_recentSavedWeights.Count > StableReadCount)
+            {
+                _recentSavedWeights.Dequeue();
+            }
+
+            _savedWeightsInitialized = true;
         }
-
-        var diff = stableWeight >= avgLast ? stableWeight - avgLast : avgLast - stableWeight;
-        var percentDiff = diff / baseline * 100.0;
-
-        return percentDiff > _autoCaptureThresholdPercent;
     }
 
     private void UpdateCurrentWeight(double weight)
     {
-        var oldWeight = _currentWeight;
-        _currentWeight = weight;
+        double oldWeight;
+        lock (_stateLock)
+        {
+            oldWeight = _currentWeight;
+            _currentWeight = weight;
+        }
 
         if (oldWeight - weight > 0.01)
         {
@@ -547,7 +660,87 @@ public class ScaleReaderService : IDisposable
 
         _autoCaptureEnabled = settings?.AutoCaptureEnabled ?? false;
         _autoCaptureThresholdPercent = settings?.AutoCaptureThresholdPercent ?? 5.0;
+
+        var holdMs = _configuration.GetValue<int>("Scale:ExactReadingHoldMilliseconds", DefaultExactReadingHoldMilliseconds);
+        if (holdMs < 100)
+        {
+            holdMs = 100;
+        }
+        _exactReadingHoldTime = TimeSpan.FromMilliseconds(holdMs);
+
         _lastSettingsRefresh = DateTime.UtcNow;
+    }
+
+    public Task<ScaleDebugState> GetDebugStateAsync()
+    {
+        double currentWeight;
+        double lastExactWeight;
+        DateTime exactWeightSince;
+        bool autoReadLocked;
+        bool seenZeroWhileLocked;
+        bool autoCaptureEnabled;
+        double autoCaptureThresholdPercent;
+        TimeSpan exactReadingHoldTime;
+        double[] weights;
+
+        lock (_stateLock)
+        {
+            currentWeight = _currentWeight;
+            lastExactWeight = _lastExactWeight;
+            exactWeightSince = _exactWeightSince;
+            autoReadLocked = _autoReadLocked;
+            seenZeroWhileLocked = _seenZeroWhileLocked;
+            autoCaptureEnabled = _autoCaptureEnabled;
+            autoCaptureThresholdPercent = _autoCaptureThresholdPercent;
+            exactReadingHoldTime = _exactReadingHoldTime;
+            weights = _recentWeights.ToArray();
+        }
+
+        var debug = new ScaleDebugState
+        {
+            AutoCaptureEnabled = autoCaptureEnabled,
+            AutoReadLocked = autoReadLocked,
+            StableReadCount = StableReadCount,
+            RecentCount = weights.Length,
+            CurrentWeight = currentWeight,
+            LastExactWeight = lastExactWeight,
+            SeenZeroWhileLocked = seenZeroWhileLocked,
+            AutoCaptureThresholdPercent = autoCaptureThresholdPercent,
+            ExactHoldElapsedMs = (DateTime.UtcNow - exactWeightSince).TotalMilliseconds,
+            ExactHoldRequiredMs = exactReadingHoldTime.TotalMilliseconds,
+            PassStabilityCheck = false
+        };
+
+        if (weights.Length > 0)
+        {
+            debug.RecentAverage = weights.Average();
+            debug.RecentMin = weights.Min();
+            debug.RecentMax = weights.Max();
+        }
+
+        if (weights.Length >= StableReadCount)
+        {
+            var lastReadings = weights[^StableReadCount..];
+            var avgLast = lastReadings.Average();
+            var current = lastReadings[^1];
+            var diff = current >= avgLast ? current - avgLast : avgLast - current;
+
+            debug.RecentAverage = avgLast;
+            debug.RecentMin = lastReadings.Min();
+            debug.RecentMax = lastReadings.Max();
+            debug.PercentDiff = avgLast == 0 ? 0 : diff / avgLast * 100.0;
+            debug.RangePercent = avgLast == 0 ? 0 : (debug.RecentMax - debug.RecentMin) / avgLast * 100.0;
+            debug.PassStabilityCheck = debug.PercentDiff <= autoCaptureThresholdPercent && debug.RangePercent <= autoCaptureThresholdPercent;
+        }
+
+        debug.PassHoldCheck = debug.ExactHoldElapsedMs >= debug.ExactHoldRequiredMs;
+
+        debug.ReadyToAutoCapture = debug.AutoCaptureEnabled
+            && !debug.AutoReadLocked
+            && debug.PassStabilityCheck
+            && debug.PassHoldCheck;
+
+        return Task.FromResult(debug);
     }
 
     private string GetConfiguredPortName()
@@ -631,6 +824,7 @@ public class ScaleReaderService : IDisposable
 
         context.ScaleReadings.Add(reading);
         await context.SaveChangesAsync();
+        AddSavedReading(weight);
     }
 
     private async Task SaveDetectedPortAsync(string portName)

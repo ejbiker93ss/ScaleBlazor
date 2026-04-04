@@ -121,6 +121,7 @@ using (var scope = app.Services.CreateScope())
             ReadingsPerPallet = 10,
             AutoCaptureEnabled = false,
             AutoCaptureThresholdPercent = 1.0,
+            DebugMode = false,
             ScalePortName = app.Configuration["Scale:PortName"]
         });
         db.SaveChanges();
@@ -139,6 +140,7 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
     command.CommandText = "PRAGMA table_info('Settings');";
 
     var hasScalePortName = false;
+    var hasDebugMode = false;
     using (var reader = command.ExecuteReader())
     {
         while (reader.Read())
@@ -147,7 +149,11 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
             if (string.Equals(columnName, "ScalePortName", StringComparison.OrdinalIgnoreCase))
             {
                 hasScalePortName = true;
-                break;
+            }
+
+            if (string.Equals(columnName, "DebugMode", StringComparison.OrdinalIgnoreCase))
+            {
+                hasDebugMode = true;
             }
         }
     }
@@ -155,6 +161,12 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
     if (!hasScalePortName)
     {
         command.CommandText = "ALTER TABLE Settings ADD COLUMN ScalePortName TEXT";
+        command.ExecuteNonQuery();
+    }
+
+    if (!hasDebugMode)
+    {
+        command.CommandText = "ALTER TABLE Settings ADD COLUMN DebugMode INTEGER NOT NULL DEFAULT 0";
         command.ExecuteNonQuery();
     }
 }

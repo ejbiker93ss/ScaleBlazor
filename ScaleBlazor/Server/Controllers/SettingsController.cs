@@ -27,6 +27,7 @@ public class SettingsController : ControllerBase
             settings = new AppSettings
             {
                 ReadingsPerPallet = 10,
+                DebugMode = false,
                 ScalePortName = _configuration["Scale:PortName"]
             };
             _context.Settings.Add(settings);
@@ -48,6 +49,7 @@ public class SettingsController : ControllerBase
             existing.ReadingsPerPallet = settings.ReadingsPerPallet;
             existing.AutoCaptureEnabled = settings.AutoCaptureEnabled;
             existing.AutoCaptureThresholdPercent = settings.AutoCaptureThresholdPercent;
+            existing.DebugMode = settings.DebugMode;
             existing.ScalePortName = settings.ScalePortName;
         }
 

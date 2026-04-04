@@ -18,11 +18,30 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("statistics")]
-    public async Task<ActionResult<ReportStatistics>> GetStatistics()
+    public async Task<ActionResult<ReportStatistics>> GetStatistics(
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null)
     {
-        var totalReadings = await _context.ScaleReadings.CountAsync();
-        var totalPallets = await _context.Pallets.CountAsync();
-        var averageWeight = await _context.ScaleReadings.AverageAsync(r => (double?)r.Weight) ?? 0;
+        var readingsQuery = _context.ScaleReadings.AsQueryable();
+        var palletsQuery = _context.Pallets.AsQueryable();
+
+        if (startDate.HasValue)
+        {
+            readingsQuery = readingsQuery.Where(r => r.Timestamp >= startDate.Value);
+            palletsQuery = palletsQuery.Where(p => p.CreatedAt >= startDate.Value);
+        }
+        if (endDate.HasValue)
+        {
+            var endOfDay = endDate.Value.Date.AddDays(1);
+            readingsQuery = readingsQuery.Where(r => r.Timestamp < endOfDay);
+            palletsQuery = palletsQuery.Where(p => p.CreatedAt < endOfDay);
+        }
+
+        var totalReadings = await readingsQuery.CountAsync();
+        var totalPallets = await palletsQuery.CountAsync();
+        var averageWeight = totalReadings > 0
+            ? await readingsQuery.AverageAsync(r => (double?)r.Weight) ?? 0
+            : 0;
         var today = DateTime.Today;
         var todayReadings = await _context.ScaleReadings
             .Where(r => r.Timestamp.Date == today)
@@ -38,13 +57,16 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("average-daily")]
-    public async Task<ActionResult<List<AverageData>>> GetDailyAverages([FromQuery] int days = 30)
+    public async Task<ActionResult<List<AverageData>>> GetDailyAverages(
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null)
     {
-        var startDate = DateTime.Now.AddDays(-days);
+        var start = startDate ?? DateTime.Now.AddDays(-30);
+        var end = endDate?.Date.AddDays(1) ?? DateTime.Now;
 
         var readings = await _context.ScaleReadings
             .AsNoTracking()
-            .Where(r => r.Timestamp >= startDate)
+            .Where(r => r.Timestamp >= start && r.Timestamp < end)
             .GroupBy(r => r.Timestamp.Date)
             .Select(g => new AverageData
             {
@@ -59,13 +81,16 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("average-weekly")]
-    public async Task<ActionResult<List<AverageData>>> GetWeeklyAverages([FromQuery] int weeks = 12)
+    public async Task<ActionResult<List<AverageData>>> GetWeeklyAverages(
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null)
     {
-        var startDate = DateTime.Now.AddDays(-weeks * 7);
+        var start = startDate ?? DateTime.Now.AddDays(-84);
+        var end = endDate?.Date.AddDays(1) ?? DateTime.Now;
 
         var readings = await _context.ScaleReadings
             .AsNoTracking()
-            .Where(r => r.Timestamp >= startDate)
+            .Where(r => r.Timestamp >= start && r.Timestamp < end)
             .ToListAsync();
 
         var weeklyData = readings
@@ -90,13 +115,16 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("trends-daily")]
-    public async Task<ActionResult<List<AverageData>>> GetTrendsDaily([FromQuery] int days = 30)
+    public async Task<ActionResult<List<AverageData>>> GetTrendsDaily(
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null)
     {
-        var startDate = DateTime.Now.AddDays(-days).Date;
+        var start = startDate ?? DateTime.Now.AddDays(-30).Date;
+        var end = endDate?.Date.AddDays(1) ?? DateTime.Now;
 
         var readings = await _context.ScaleReadings
             .AsNoTracking()
-            .Where(r => r.Timestamp >= startDate)
+            .Where(r => r.Timestamp >= start && r.Timestamp < end)
             .GroupBy(r => r.Timestamp.Date)
             .Select(g => new AverageData
             {
@@ -108,6 +136,25 @@ public class ReportsController : ControllerBase
             .ToListAsync();
 
         return readings;
+    }
+
+    [HttpGet("pallets")]
+    public async Task<ActionResult<List<Pallet>>> GetPalletStats(
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null,
+        [FromQuery] int count = 50)
+    {
+        var query = _context.Pallets.AsNoTracking().AsQueryable();
+
+        if (startDate.HasValue)
+            query = query.Where(p => p.CreatedAt >= startDate.Value);
+        if (endDate.HasValue)
+            query = query.Where(p => p.CreatedAt < endDate.Value.Date.AddDays(1));
+
+        return await query
+            .OrderByDescending(p => p.CreatedAt)
+            .Take(count)
+            .ToListAsync();
     }
 
     [HttpGet("export")]

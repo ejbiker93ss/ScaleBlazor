@@ -6,5 +6,6 @@ public class AppSettings
     public int ReadingsPerPallet { get; set; } = 10;
     public bool AutoCaptureEnabled { get; set; } = false;
     public double AutoCaptureThresholdPercent { get; set; } = 1.0;
+    public bool DebugMode { get; set; } = false;
     public string? ScalePortName { get; set; }
 }
