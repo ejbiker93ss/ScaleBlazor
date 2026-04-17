@@ -934,7 +934,8 @@ public class ScaleReaderService : IDisposable
                     }
                     else
                     {
-                        throw new Exception($"Port {portName} not found. Available ports: {string.Join(", ", availablePorts)}");
+                        _logger.LogError("Port {PortName} not found. Available ports: {AvailablePorts}", portName, string.Join(", ", availablePorts));
+                        return false;
                     }
                 }
             }
@@ -984,7 +985,7 @@ public class ScaleReaderService : IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Error closing scale connection");
+            _logger.LogError(ex, "Error closing scale connection");
         }
     }
 

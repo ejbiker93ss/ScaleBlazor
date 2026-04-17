@@ -97,9 +97,9 @@
     }
 
     .timeline-card {
-        flex: 0 1 auto;
-        max-height: 200px;
-        min-height: 0;
+        flex: 1 1 auto;
+        max-height: none;
+        min-height: 180px;
         display: flex;
         flex-direction: column;
     }
@@ -134,6 +134,9 @@ body {
 .scale-system {
     max-width: 1400px;
     margin: 0 auto;
+    min-height: calc(100vh - 24px);
+    display: flex;
+    flex-direction: column;
 }
 
 .title {
@@ -148,7 +151,8 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 14px;
-    margin-bottom: 14px;    
+    margin-bottom: 14px;
+    flex: 0 0 auto;
 }
 
 .card {
@@ -560,6 +564,17 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 240px;
+}
+
+.timeline-card .card-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-body .mud-chart,
@@ -588,7 +603,9 @@ canvas {
 }
 
 .timeline-card canvas {
-    min-height: 240px;
+    min-height: 0;
+    height: 100% !important;
+    flex: 1;
 }
 
 @media (max-width: 1100px) and (max-height: 650px) {

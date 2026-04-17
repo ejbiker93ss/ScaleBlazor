@@ -200,9 +200,11 @@
     private int timelineRangeDays = 1;
     private Timer? updateTimer;
     private readonly SemaphoreSlim updateLock = new(1, 1);
+    private bool shouldRenderCharts;
     private int readingsPerPallet = 10;
     private int readingsHistoryCount = 10;
     private int? lastReadingId;
+    private long refreshVersion;
     private bool flashSuccess;
     private bool isCapturing;
     private string? captureMessage;
@@ -216,6 +218,28 @@
         .FirstOrDefault();
     private string TimelineTitle => timelineRangeDays == 1 ? "Today's Weight Timeline" : $"Last {timelineRangeDays} Days Weight Trend";
     private string CurrentDateTimeDisplay => DateTime.Now.ToString("ddd, MMM d, yyyy h:mm:ss tt");
+
+    private string FreshUrl(string path)
+    {
+        var separator = path.Contains('?') ? "&" : "?";
+        var version = Interlocked.Increment(ref refreshVersion);
+        return $"{path}{separator}_ts={version}";
+    }
+
+    private void QueueFlashFeedback()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            try
+            {
+                await TriggerFlash();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error flashing capture feedback: {ex.Message}");
+            }
+        });
+    }
 
     private async Task UpdateCharts()
     {
@@ -242,8 +266,9 @@
                 showDataLabels = true
             });
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error updating charts: {ex.Message}");
         }
     }
 
@@ -260,6 +285,11 @@
         if (firstRender)
         {
             await JSInterop.InitializeSound("/sounds/reading-success.mp3");
+            await UpdateCharts();
+        }
+        else if (shouldRenderCharts)
+        {
+            shouldRenderCharts = false;
             await UpdateCharts();
         }
     }
@@ -285,7 +315,7 @@
     {
         try
         {
-            scaleStatus = await Http.GetFromJsonAsync<ScaleStatus>("api/scale/status");
+            scaleStatus = await Http.GetFromJsonAsync<ScaleStatus>(FreshUrl("api/scale/status"));
         }
         catch (Exception ex)
         {
@@ -297,16 +327,16 @@
     {
         try
         {
-            lastReadings = await Http.GetFromJsonAsync<List<ScaleReading>>($"api/scale/readings?count={readingsHistoryCount}") ?? new();
-            pallets = await Http.GetFromJsonAsync<List<Pallet>>("api/pallets?count=10") ?? new();
-            activePallet = await Http.GetFromJsonAsync<Pallet?>("api/pallets/active");
-            todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
-            dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>("api/scale/daily-averages?days=7") ?? new();
+            lastReadings = await Http.GetFromJsonAsync<List<ScaleReading>>(FreshUrl($"api/scale/readings?count={readingsHistoryCount}")) ?? new();
+            pallets = await Http.GetFromJsonAsync<List<Pallet>>(FreshUrl("api/pallets?count=10")) ?? new();
+            activePallet = await Http.GetFromJsonAsync<Pallet?>(FreshUrl("api/pallets/active"));
+            todayReadings = await Http.GetFromJsonAsync<List<ScaleReading>>(FreshUrl("api/scale/readings/today")) ?? new();
+            dailyAverages = await Http.GetFromJsonAsync<List<DailyAverage>>(FreshUrl("api/scale/daily-averages?days=7")) ?? new();
             await LoadTimelineData();
             lastReadingId = lastReadings.FirstOrDefault()?.Id;
 
+            shouldRenderCharts = true;
             await InvokeAsync(StateHasChanged);
-            await UpdateCharts();
         }
         catch (Exception ex)
         {
@@ -318,20 +348,20 @@
     {
         if (timelineRangeDays == 1)
         {
-            timelineReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings/today") ?? new();
+            timelineReadings = await Http.GetFromJsonAsync<List<ScaleReading>>(FreshUrl("api/scale/readings/today")) ?? new();
             timelineAverages = new();
             return;
         }
 
-        timelineAverages = await Http.GetFromJsonAsync<List<DailyAverage>>($"api/scale/daily-averages?days={timelineRangeDays}") ?? new();
+        timelineAverages = await Http.GetFromJsonAsync<List<DailyAverage>>(FreshUrl($"api/scale/daily-averages?days={timelineRangeDays}")) ?? new();
         timelineReadings = new();
     }
 
     private async Task OnTimelineRangeChanged()
     {
         await LoadTimelineData();
-        await UpdateCharts();
-        await InvokeAsync(StateHasChanged);
+        shouldRenderCharts = true;
+        StateHasChanged();
     }
 
     private async Task OnReadingsCountChanged(ChangeEventArgs args)
@@ -387,7 +417,7 @@
 
         try
         {
-            var reading = await Http.GetFromJsonAsync<ScaleReading>("api/scale/current");
+            var reading = await Http.GetFromJsonAsync<ScaleReading>(FreshUrl("api/scale/current"));
             if (reading != null)
             {
                 currentWeight = reading.Weight;
@@ -398,8 +428,12 @@
                     debugState = await Http.GetFromJsonAsync<ScaleDebugState>("api/scale/debug-state");
                 }
 
+                var previousReadingId = lastReadingId;
                 await CheckForNewReading();
-                await InvokeAsync(StateHasChanged);
+                if (lastReadingId == previousReadingId)
+                {
+                    await InvokeAsync(StateHasChanged);
+                }
             }
         }
         catch (Exception ex)
@@ -430,7 +464,7 @@
                     currentTimestamp = reading.Timestamp.ToString("h:mm:ss tt");
                 }
 
-                await TriggerFlash();
+                QueueFlashFeedback();
                 await LoadData();
                 captureMessage = "Reading captured.";
                 captureSuccess = true;
@@ -459,7 +493,7 @@
     {
         try
         {
-            var latestReadings = await Http.GetFromJsonAsync<List<ScaleReading>>("api/scale/readings?count=1");
+            var latestReadings = await Http.GetFromJsonAsync<List<ScaleReading>>(FreshUrl("api/scale/readings?count=1"));
             var latestReading = latestReadings?.FirstOrDefault();
 
             if (latestReading == null)
@@ -476,7 +510,7 @@
             if (latestReading.Id != lastReadingId)
             {
                 lastReadingId = latestReading.Id;
-                await TriggerFlash();
+                QueueFlashFeedback();
                 await LoadData();
             }
         }
@@ -541,7 +575,7 @@
         }
     }
 
-    private async Task SetDailyAverageView(string view)
+    private void SetDailyAverageView(string view)
     {
         if (dailyAverageView == view)
         {
@@ -549,11 +583,9 @@
         }
 
         dailyAverageView = view;
-        StateHasChanged();
         if (view == "graph")
         {
-            await Task.Delay(50);
-            await UpdateCharts();
+            shouldRenderCharts = true;
         }
     }
 

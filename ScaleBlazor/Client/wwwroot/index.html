@@ -129,21 +129,56 @@
                 const labels = data.map(d => { const date = new Date(d.date); return `${date.toLocaleDateString('en-US', { month: 'short' })} ${date.getDate()}`; });
                 const values = data.map(d => d.averageWeight);
                 const palletCounts = data.map(d => d.palletCount ?? 0);
-                if (this._dailyChart) this._dailyChart.destroy();
                 const minValue = values.length > 0 ? Math.min(...values) : 34;
                 const maxValue = values.length > 0 ? Math.max(...values) : 55;
                 const padding = (maxValue - minValue) * 0.1 || 1;
                 const isSmall = window.innerWidth <= 900 && window.innerHeight <= 450;
-                this._dailyChart = new Chart(ctx, {
+                const options = {
+					indexAxis: 'y',
+					responsive: true,
+					maintainAspectRatio: false,
+					animation: false,
+					plugins: {
+						legend: { display: false },
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const count = palletCounts[context.dataIndex] ?? 0;
+									return `Avg: ${context.parsed.x.toFixed(2)} lbs (${count} pallets)`;
+								}
+							}
+						}
+					},
+					scales: {
+						x: {
+							beginAtZero: false,
+							min: minValue - padding,
+							max: maxValue + padding,
+							ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } },
+							grid: { display: !isSmall }
+						},
+						y: {
+							grid: { display: false },
+							ticks: { font: { size: isSmall ? 5 : 11 } }
+						}
+					},
+					layout: { padding: isSmall ? 0 : 10 }
+				};
+
+				if (this._dailyChart) {
+					this._dailyChart.data.labels = labels;
+					this._dailyChart.data.datasets[0].data = values;
+					this._dailyChart.data.datasets[0].borderRadius = isSmall ? 1 : 4;
+					this._dailyChart.options = options;
+					this._dailyChart.resize();
+					this._dailyChart.update('none');
+					return;
+				}
+
+				this._dailyChart = new Chart(ctx, {
                     type: 'bar',
                     data: { labels: labels, datasets: [{ data: values, backgroundColor: '#FF6B35', borderRadius: isSmall ? 1 : 4 }] },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { const count = palletCounts[context.dataIndex] ?? 0; return `Avg: ${context.parsed.x.toFixed(2)} lbs (${count} pallets)`; } } } },
-                        scales: { x: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, y: { grid: { display: false }, ticks: { font: { size: isSmall ? 5 : 11 } } } },
-                        layout: { padding: isSmall ? 0 : 10 }
-                    }
+                    options: options
                 });
             },
             updateTimelineChart: function (data) {
@@ -184,41 +219,73 @@
 				const seriesName = isArrayInput ? 'Weight (lbs)' : (data?.seriesName ?? 'Weight (lbs)');
 				const isDaily = isArrayInput ? false : !!data?.isDaily;
 				const showDataLabels = isArrayInput ? true : data?.showDataLabels !== false;
-				const safeLabels = labels.slice(0, values.length);
-
-                if (this._timelineChart) this._timelineChart.destroy();
+              const safeLabels = labels.slice(0, values.length);
                 const minValue = values.length > 0 ? Math.min(...values) : 35;
                 const maxValue = values.length > 0 ? Math.max(...values) : 55;
                 const padding = (maxValue - minValue) * 0.1 || 1;
                 const isSmall = window.innerWidth <= 900 && window.innerHeight <= 450;
                 const labelStep = values.length > (isSmall ? 6 : 14) ? Math.ceil(values.length / (isSmall ? 6 : 14)) : 1;
+				const options = {
+					responsive: true,
+					maintainAspectRatio: false,
+					animation: false,
+					plugins: {
+						legend: { display: false },
+						timelineDataLabels: {
+							display: showDataLabels,
+							step: labelStep,
+							color: '#35516b',
+							font: isSmall ? '600 8px Segoe UI' : '600 11px Segoe UI',
+							formatter: function (value) { return Number(value).toFixed(2); }
+						},
+						tooltip: {
+							callbacks: {
+								label: function (context) {
+									return `${seriesName}: ${context.parsed.y.toFixed(2)} lbs`;
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: false,
+							min: minValue - padding,
+							max: maxValue + padding,
+							ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } },
+							grid: { display: !isSmall }
+						},
+						x: {
+							grid: { color: '#e0e0e0', display: !isSmall },
+							ticks: {
+								autoSkip: true,
+								maxTicksLimit: isDaily ? (isSmall ? 6 : 12) : undefined,
+								font: { size: isSmall ? 5 : 11 },
+								maxRotation: isSmall ? 45 : 0,
+								minRotation: isSmall ? 45 : 0
+							}
+						}
+					},
+					layout: { padding: isSmall ? 0 : 10 }
+				};
+
+				if (this._timelineChart) {
+					this._timelineChart.data.labels = safeLabels;
+					this._timelineChart.data.datasets[0].label = seriesName;
+					this._timelineChart.data.datasets[0].data = values;
+					this._timelineChart.data.datasets[0].tension = isDaily ? 0.25 : 0.4;
+					this._timelineChart.data.datasets[0].pointRadius = isSmall ? 2 : 4;
+					this._timelineChart.data.datasets[0].borderWidth = isSmall ? 1 : 2;
+					this._timelineChart.options = options;
+					this._timelineChart.resize();
+					this._timelineChart.update('none');
+					return;
+				}
 
                 this._timelineChart = new Chart(ctx, {
                     type: 'line',
                     plugins: [timelineDataLabelPlugin],
                     data: { labels: safeLabels, datasets: [{ label: seriesName, data: values, borderColor: '#4FC3F7', backgroundColor: 'rgba(79, 195, 247, 0.1)', tension: isDaily ? 0.25 : 0.4, fill: true, pointBackgroundColor: '#4FC3F7', pointBorderColor: '#4FC3F7', pointRadius: isSmall ? 2 : 4, borderWidth: isSmall ? 1 : 2 }] },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-							timelineDataLabels: {
-								display: showDataLabels,
-								step: labelStep,
-								color: '#35516b',
-								font: isSmall ? '600 8px Segoe UI' : '600 11px Segoe UI',
-								formatter: function (value) { return Number(value).toFixed(2); }
-							},
-							tooltip: {
-								callbacks: {
-									label: function (context) {
-										return `${seriesName}: ${context.parsed.y.toFixed(2)} lbs`;
-									}
-								}
-							}
-						},
-						scales: { y: { beginAtZero: false, min: minValue - padding, max: maxValue + padding, ticks: { stepSize: 1, font: { size: isSmall ? 5 : 12 } }, grid: { display: !isSmall } }, x: { grid: { color: '#e0e0e0', display: !isSmall }, ticks: { autoSkip: true, maxTicksLimit: isDaily ? (isSmall ? 6 : 12) : undefined, font: { size: isSmall ? 5 : 11 }, maxRotation: isSmall ? 45 : 0, minRotation: isSmall ? 45 : 0 } } },
-                        layout: { padding: isSmall ? 0 : 10 }
-                    }
+                    options: options
                 });
             },
             updateReportOverviewChart: function (data) {
