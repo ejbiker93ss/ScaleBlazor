@@ -1,0 +1,3029 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-04-17T01:53:46.3659791Z",
+  "analysisEndTime": "2026-04-17T01:53:49.0647066Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 3,
+      "issues": 4,
+      "incidents": 116,
+      "effort": 116
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 3,
+        "Optional": 0,
+        "Potential": 113,
+        "Information": 0
+      },
+      "category": {
+        "Project": 3,
+        "NuGet": 6,
+        "Api": 107
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 22,
+      "properties": {
+        "appName": "ScaleBlazor.Client",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net7.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 13,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 4961,
+        "linesOfCode": 175,
+        "totalApiScanned": 3644,
+        "minLinesOfCodeToChange": 18,
+        "maxLinesOfCodeToChange": 18
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "56704f29-807f-49db-b989-c0682e8f7e79",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Components.WebAssembly, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly, and replace with new package Microsoft.AspNetCore.Components.WebAssembly 10.0.6",
+              "protected": "Microsoft.AspNetCore.Components.WebAssembly, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly, and replace with new package Microsoft.AspNetCore.Components.WebAssembly 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+            "snippet": "Microsoft.AspNetCore.Components.WebAssembly, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly, and replace with new package Microsoft.AspNetCore.Components.WebAssembly 10.0.6",
+            "protectedSnippet": "Microsoft.AspNetCore.Components.WebAssembly, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly, and replace with new package Microsoft.AspNetCore.Components.WebAssembly 10.0.6",
+            "label": "Microsoft.AspNetCore.Components.WebAssembly 7.0.19",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Components.WebAssembly",
+              "PackageVersion": "7.0.19",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "940b203e-b2fc-488b-a40b-e41a319e05fd",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Components.WebAssembly.DevServer, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.DevServer, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.DevServer 10.0.6",
+              "protected": "Microsoft.AspNetCore.Components.WebAssembly.DevServer, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.DevServer, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.DevServer 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+            "snippet": "Microsoft.AspNetCore.Components.WebAssembly.DevServer, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.DevServer, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.DevServer 10.0.6",
+            "protectedSnippet": "Microsoft.AspNetCore.Components.WebAssembly.DevServer, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.DevServer, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.DevServer 10.0.6",
+            "label": "Microsoft.AspNetCore.Components.WebAssembly.DevServer 7.0.19",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Components.WebAssembly.DevServer",
+              "PackageVersion": "7.0.19",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6a33be4c-a4d9-4e96-919e-8b24f4786626",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Http, 7.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http, and replace with new package Microsoft.Extensions.Http 10.0.6",
+              "protected": "Microsoft.Extensions.Http, 7.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http, and replace with new package Microsoft.Extensions.Http 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+            "snippet": "Microsoft.Extensions.Http, 7.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http, and replace with new package Microsoft.Extensions.Http 10.0.6",
+            "protectedSnippet": "Microsoft.Extensions.Http, 7.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http, and replace with new package Microsoft.Extensions.Http 10.0.6",
+            "label": "Microsoft.Extensions.Http 7.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Http",
+              "PackageVersion": "7.0.0",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "fdc5d54a-e6c7-4ce7-a974-f2dc1a875f6f",
+          "ruleId": "Project.0002",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net7.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net7.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+            "snippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net7.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "59193085-5f69-4e88-a111-b71428a52f0b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "speedTestResult = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "speedTestResult = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1267,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "7954b1c2-cb68-41ca-859a-a9b1ea2b1aaf",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var errorContent = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var errorContent = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1260,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "6b39cd2e-a932-4303-9356-f3477eb17a06",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var readings = await response.Content.ReadFromJsonAsync\u003CList\u003Cstring\u003E\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var readings = await response.Content.ReadFromJsonAsync\u003CList\u003Cstring\u003E\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1223,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "a70a41ff-3100-44f3-bd8e-e6c30154bdf5",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var errorContent = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var errorContent = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1215,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "ae67783a-f560-46d2-9eff-35e893fda522",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var result = await response.Content.ReadFromJsonAsync\u003CPurgeResult\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var result = await response.Content.ReadFromJsonAsync\u003CPurgeResult\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1151,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "3045b085-ca4f-4b75-a832-804a6308f537",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var result = await response.Content.ReadFromJsonAsync\u003CPortDetectionResult\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var result = await response.Content.ReadFromJsonAsync\u003CPortDetectionResult\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1085,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "1492adcb-1b6b-4bd6-8de4-bca77b86dc3a",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var result = await response.Content.ReadFromJsonAsync\u003CPortDetectionResult\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Settings_razor.g.cs",
+            "snippet": "var result = await response.Content.ReadFromJsonAsync\u003CPortDetectionResult\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1078,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "ee8e4600-a36e-4efd-9006-75334d8e865b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var errorBody = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Index_razor.g.cs",
+            "snippet": "var errorBody = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1438,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "aba84893-f4f4-4fbb-a0c6-8abe8813e1f2",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var reading = await response.Content.ReadFromJsonAsync\u003CScaleReading\u003E();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Index_razor.g.cs",
+            "snippet": "var reading = await response.Content.ReadFromJsonAsync\u003CScaleReading\u003E();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1424,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "6e28a8bd-375b-4f1d-abaa-eefb8f125f76",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "updateTimer = new Timer(async _ =\u003E await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(800));",
+              "protected": "M:System.TimeSpan.FromMilliseconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\obj\\Debug\\net7.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Index_razor.g.cs",
+            "snippet": "updateTimer = new Timer(async _ =\u003E await UpdateLiveReading(), null, TimeSpan.Zero, TimeSpan.FromMilliseconds(800));",
+            "protectedSnippet": "M:System.TimeSpan.FromMilliseconds(System.Double)",
+            "label": "M:System.TimeSpan.FromMilliseconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1244,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "e300e2c1-5c51-487f-b524-3b5269d00455",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_logger.LogWarning(ex, \u0022HTTP request timed out for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                    request.Method,\r\n                    request.RequestUri,\r\n                    delay);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Services\\ResilienceHandler.cs",
+            "snippet": "_logger.LogWarning(ex, \u0022HTTP request timed out for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                    request.Method,\r\n                    request.RequestUri,\r\n                    delay);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 56,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "7dc80dfa-9bcd-400f-982c-7015af668077",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_logger.LogWarning(ex, \u0022HTTP request failed for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                    request.Method,\r\n                    request.RequestUri,\r\n                    delay);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Services\\ResilienceHandler.cs",
+            "snippet": "_logger.LogWarning(ex, \u0022HTTP request failed for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                    request.Method,\r\n                    request.RequestUri,\r\n                    delay);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 47,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "d145ed98-0ac3-42cb-8782-1f39b8ff48cc",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_logger.LogWarning(\u0022Transient HTTP {StatusCode} for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                        (int)response.StatusCode,\r\n                        request.Method,\r\n                        request.RequestUri,\r\n                        delay);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Services\\ResilienceHandler.cs",
+            "snippet": "_logger.LogWarning(\u0022Transient HTTP {StatusCode} for {Method} {Uri}. Retrying in {Delay}.\u0022,\r\n                        (int)response.StatusCode,\r\n                        request.Method,\r\n                        request.RequestUri,\r\n                        delay);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 32,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "43edb8cd-d2f9-451d-bd9b-0eca614edac0",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "client.Timeout = TimeSpan.FromSeconds(5);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Program.cs",
+            "snippet": "client.Timeout = TimeSpan.FromSeconds(5);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 14,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "17f5bf5d-0c89-47a8-8cd3-b0c95fcc89ca",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Program.cs",
+            "snippet": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "987bdf5c-c8b8-4667-959b-6b112ed1e1aa",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Program.cs",
+            "snippet": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "cc161590-cd6b-43d7-82d7-ed3a9599e389",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Program.cs",
+            "snippet": "client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "949cce0c-6e49-49ff-a469-f1556e8344d0",
+          "ruleId": "Api.0003",
+          "description": "URI query redaction in IHttpClientFactory logs ",
+          "projectPath": "ScaleBlazor\\Client\\ScaleBlazor.Client.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddHttpClient(\u0022ScaleBlazor.ServerAPI\u0022, client =\u003E\r\n    {\r\n        client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);\r\n        client.Timeout = TimeSpan.FromSeconds(5);\r\n    })\r\n    .AddHttpMessageHandler\u003CResilienceHandler\u003E();",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.AddHttpClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.Net.Http.HttpClient})"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Client\\Program.cs",
+            "snippet": "builder.Services.AddHttpClient(\u0022ScaleBlazor.ServerAPI\u0022, client =\u003E\r\n    {\r\n        client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);\r\n        client.Timeout = TimeSpan.FromSeconds(5);\r\n    })\r\n    .AddHttpMessageHandler\u003CResilienceHandler\u003E();",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.AddHttpClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.Net.Http.HttpClient})",
+            "label": "M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.AddHttpClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Action{System.Net.Http.HttpClient})",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/9.0/query-redaction-logs.md",
+                "isCustom": false
+              }
+            ],
+            "line": 11,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 93,
+      "properties": {
+        "appName": "ScaleBlazor.Server",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net7.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 12,
+        "numberOfCodeFiles": 9,
+        "linesTotal": 2101,
+        "linesOfCode": 2055,
+        "totalApiScanned": 2580,
+        "minLinesOfCodeToChange": 89,
+        "maxLinesOfCodeToChange": 89
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "725fdc78-e2f0-4ba5-a31e-cfce0386aa34",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Components.WebAssembly.Server, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.6",
+              "protected": "Microsoft.AspNetCore.Components.WebAssembly.Server, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+            "snippet": "Microsoft.AspNetCore.Components.WebAssembly.Server, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.6",
+            "protectedSnippet": "Microsoft.AspNetCore.Components.WebAssembly.Server, 7.0.19\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.6",
+            "label": "Microsoft.AspNetCore.Components.WebAssembly.Server 7.0.19",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Components.WebAssembly.Server",
+              "PackageVersion": "7.0.19",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "8a5f8e2f-938a-46cc-abbf-9098280da986",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Sqlite, 7.0.20\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.6",
+              "protected": "Microsoft.EntityFrameworkCore.Sqlite, 7.0.20\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Sqlite, 7.0.20\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.6",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Sqlite, 7.0.20\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Sqlite, and replace with new package Microsoft.EntityFrameworkCore.Sqlite 10.0.6",
+            "label": "Microsoft.EntityFrameworkCore.Sqlite 7.0.20",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Sqlite",
+              "PackageVersion": "7.0.20",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "364a271b-e55a-4df1-ba2f-baa1bae447bd",
+          "ruleId": "NuGet.0002",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.IO.Ports, 7.0.0\n\nRecommendation:\n\nRemove System.IO.Ports, and replace with new package System.IO.Ports 10.0.6",
+              "protected": "System.IO.Ports, 7.0.0\n\nRecommendation:\n\nRemove System.IO.Ports, and replace with new package System.IO.Ports 10.0.6"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+            "snippet": "System.IO.Ports, 7.0.0\n\nRecommendation:\n\nRemove System.IO.Ports, and replace with new package System.IO.Ports 10.0.6",
+            "protectedSnippet": "System.IO.Ports, 7.0.0\n\nRecommendation:\n\nRemove System.IO.Ports, and replace with new package System.IO.Ports 10.0.6",
+            "label": "System.IO.Ports 7.0.0",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageVersion": "7.0.0",
+              "PackageNewVersion": "10.0.6",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "7f187e66-d787-4800-aefb-b4348a75d8a8",
+          "ruleId": "Project.0002",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net7.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net7.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+            "snippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net7.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "810ba513-be25-4cbe-a15f-78b2462954c7",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort.Close();",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort.Close();",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 982,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "065adea7-695d-447e-aa1d-f4eccb5c4db1",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort.Close();",
+              "protected": "M:System.IO.Ports.SerialPort.Close"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort.Close();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.Close",
+            "label": "M:System.IO.Ports.SerialPort.Close",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 982,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "ca9a3d9e-6563-4445-a492-9c6f6a24a73c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true)\r\n            {\r\n                _serialPort.Close();\r\n            }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true)\r\n            {\r\n                _serialPort.Close();\r\n            }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 980,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "1c273789-1dc3-4c6f-ac32-d4a7903bc2d9",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true)\r\n            {\r\n                _serialPort.Close();\r\n            }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true)\r\n            {\r\n                _serialPort.Close();\r\n            }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 980,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e30941f7-781d-4172-9b16-2fa24ad46cf5",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort = serialPort;",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort = serialPort;",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 957,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "859f8893-4a77-49b3-9afa-85846e75fdd5",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort?.Dispose();",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort?.Dispose();",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 956,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "b7e9726e-3829-4433-90de-7e34bd57158a",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "serialPort.Open();",
+              "protected": "M:System.IO.Ports.SerialPort.Open"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "serialPort.Open();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.Open",
+            "label": "M:System.IO.Ports.SerialPort.Open",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 955,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e86e1dea-3cf6-47b4-8cb1-828d5a13f842",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.RtsEnable"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.RtsEnable",
+            "label": "P:System.IO.Ports.SerialPort.RtsEnable",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "801aa450-9dcf-4e82-84cc-2028b4097d37",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.DtrEnable"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.DtrEnable",
+            "label": "P:System.IO.Ports.SerialPort.DtrEnable",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "4fc62a79-5873-480b-b872-b72693501d7f",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.WriteTimeout"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.WriteTimeout",
+            "label": "P:System.IO.Ports.SerialPort.WriteTimeout",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f37e02fb-bb81-42ba-a4af-a4b599c32b95",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.ReadTimeout"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.ReadTimeout",
+            "label": "P:System.IO.Ports.SerialPort.ReadTimeout",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "172ac9ec-bd7d-41f8-97ca-2b4958a7b319",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "8476aa5d-ab5e-45ce-9082-d326ac05310a",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "d12bb512-157f-467c-a312-4a886b2f52fb",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "F:System.IO.Ports.Handshake.None"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "F:System.IO.Ports.Handshake.None",
+            "label": "F:System.IO.Ports.Handshake.None",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "309f4a88-5d23-4a7f-9cfb-59fec713ed7e",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "677501fe-0996-40ab-9c54-34e5f3c87cc2",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.Handshake",
+            "label": "P:System.IO.Ports.SerialPort.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "23fde800-3305-4dac-9482-dad375d0ec5e",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "c6c91b95-5e79-4098-a7e2-4e187a645656",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.StopBits",
+            "label": "P:System.IO.Ports.SerialPort.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "5817a545-2d59-4052-82f7-6a0a9916326c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "6e8f464b-2a17-475a-90fc-bbc5d6559e21",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.Parity",
+            "label": "P:System.IO.Ports.SerialPort.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "894187cf-9228-470a-abd5-eea52fa040b7",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.DataBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.DataBits",
+            "label": "P:System.IO.Ports.SerialPort.DataBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f7c98df0-747a-442c-add2-7bd52408e3a2",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "P:System.IO.Ports.SerialPort.BaudRate"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.BaudRate",
+            "label": "P:System.IO.Ports.SerialPort.BaudRate",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "e0cb69af-e60a-43a9-87fd-dd163d7af78d",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "2831b21d-18d1-4ffd-896c-00ea90ec3293",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+              "protected": "M:System.IO.Ports.SerialPort.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var serialPort = new SerialPort(portName)\r\n            {\r\n                BaudRate = baudRate,\r\n                DataBits = dataBits,\r\n                Parity = parity,\r\n                StopBits = stopBits,\r\n                Handshake = Handshake.None,\r\n                ReadTimeout = 500,\r\n                WriteTimeout = 500,\r\n                DtrEnable = true,\r\n                RtsEnable = true\r\n            };",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.#ctor(System.String)",
+            "label": "M:System.IO.Ports.SerialPort.#ctor(System.String)",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 942,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "9a4f7677-3cf7-44c5-b439-0d30366b1a71",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var detectedPort = AutoDetectPortAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var detectedPort = AutoDetectPortAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 929,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "84dd2ce1-1e24-40e7-a883-8b4331601464",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 919,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "6ef01525-fddd-441b-9f3d-d7c881a9e468",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 919,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "db828205-eb45-466b-a977-13d5086bfae1",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "F:System.IO.Ports.StopBits.One"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "F:System.IO.Ports.StopBits.One",
+            "label": "F:System.IO.Ports.StopBits.One",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 919,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "e141dd33-3428-467e-98a9-c418a1c3ce22",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 919,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "603dac2b-5c11-43b5-8780-9cc12081dbd8",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 918,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "7d2cff78-1dd2-4506-9929-395b2db56754",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 918,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "343b4b4e-5aac-4e9b-b3d4-fbc1682e462f",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "F:System.IO.Ports.Parity.None"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "F:System.IO.Ports.Parity.None",
+            "label": "F:System.IO.Ports.Parity.None",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 918,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "ba46d33f-72b8-4b71-bf79-e0c83fe6c3a8",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 918,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "84a654c3-3ac7-4f49-b1de-7ba264b995fd",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort?.Dispose();",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort?.Dispose();",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 909,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "69bf615c-2a7b-426c-ade4-8d5fc3c35b11",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var ports = SerialPort.GetPortNames().ToList();",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var ports = SerialPort.GetPortNames().ToList();",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 876,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "f4579c1e-d9c4-470b-ae1b-73bbd273f86c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var ports = SerialPort.GetPortNames().ToList();",
+              "protected": "M:System.IO.Ports.SerialPort.GetPortNames"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var ports = SerialPort.GetPortNames().ToList();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.GetPortNames",
+            "label": "M:System.IO.Ports.SerialPort.GetPortNames",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 876,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "d0bf2ac7-4f63-4c23-ab41-aed4863385e6",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_readTask?.Wait(TimeSpan.FromSeconds(2));",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_readTask?.Wait(TimeSpan.FromSeconds(2));",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 859,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "d343ca11-d3fd-4e3c-aa08-962d322f1666",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_exactReadingHoldTime = TimeSpan.FromMilliseconds(holdMs);",
+              "protected": "M:System.TimeSpan.FromMilliseconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_exactReadingHoldTime = TimeSpan.FromMilliseconds(holdMs);",
+            "protectedSnippet": "M:System.TimeSpan.FromMilliseconds(System.Double)",
+            "label": "M:System.TimeSpan.FromMilliseconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 668,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "454edf3f-eea6-48e5-8ac9-a6f9cb5fc2fe",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (DateTime.UtcNow - _lastSettingsRefresh \u003C TimeSpan.FromSeconds(2))\r\n        {\r\n            return;\r\n        }",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (DateTime.UtcNow - _lastSettingsRefresh \u003C TimeSpan.FromSeconds(2))\r\n        {\r\n            return;\r\n        }",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 651,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "44c9b136-a248-48f0-a4d6-28e70bd57434",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var lines = await CaptureRawLinesAsync(readingsToTest, TimeSpan.FromSeconds(10));",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var lines = await CaptureRawLinesAsync(readingsToTest, TimeSpan.FromSeconds(10));",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 412,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "7fe42575-e9ec-4724-ae17-3e4993a6fd7f",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (!_isRunning || _serialPort?.IsOpen != true)\r\n        {\r\n            return \u0022Scale is not connected or running.\u0022;\r\n        }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (!_isRunning || _serialPort?.IsOpen != true)\r\n        {\r\n            return \u0022Scale is not connected or running.\u0022;\r\n        }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 406,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "3c8f5cf9-32fe-47db-b264-5c1c5a54b8e5",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (!_isRunning || _serialPort?.IsOpen != true)\r\n        {\r\n            return \u0022Scale is not connected or running.\u0022;\r\n        }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (!_isRunning || _serialPort?.IsOpen != true)\r\n        {\r\n            return \u0022Scale is not connected or running.\u0022;\r\n        }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 406,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "d1546278-0d71-4eb5-a00c-63a02ff9d76b",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen != true)\r\n        {\r\n            return Array.Empty\u003Cstring\u003E();\r\n        }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen != true)\r\n        {\r\n            return Array.Empty\u003Cstring\u003E();\r\n        }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 367,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "12351057-d4b5-4c4e-9935-c0738dc76ba2",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen != true)\r\n        {\r\n            return Array.Empty\u003Cstring\u003E();\r\n        }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen != true)\r\n        {\r\n            return Array.Empty\u003Cstring\u003E();\r\n        }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 367,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "763ae8d9-3a73-4835-9986-d7ea36e3a7ca",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var data = _serialPort.ReadExisting();",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var data = _serialPort.ReadExisting();",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 183,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "d5ea99d5-35d6-4af1-bdfb-2d1c4784e9a1",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var data = _serialPort.ReadExisting();",
+              "protected": "M:System.IO.Ports.SerialPort.ReadExisting"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var data = _serialPort.ReadExisting();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.ReadExisting",
+            "label": "M:System.IO.Ports.SerialPort.ReadExisting",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 183,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "0ff5b59b-f053-453f-91cf-105884dae5da",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 180,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "cfc24e84-47ba-479e-8cce-7c2eeb06ccec",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+              "protected": "P:System.IO.Ports.SerialPort.BytesToRead"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.BytesToRead",
+            "label": "P:System.IO.Ports.SerialPort.BytesToRead",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 180,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "fbf73a9e-2d62-421c-8703-5db98502aa6c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 180,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "a786dfdb-7aa3-49d7-ba31-0315b1a68687",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 _serialPort.BytesToRead \u003E 0)\r\n                {\r\n                    // Read available data\r\n                    var data = _serialPort.ReadExisting();\r\n                    buffer.Append(data);\r\n\r\n                    // Process complete lines (ending with CR or LF)\r\n                    var bufferStr = buffer.ToString();\r\n                    var lines = bufferStr.Split(new[] { \u0027\\r\u0027, \u0027\\n\u0027 }, StringSplitOptions.RemoveEmptyEntries);\r\n\r\n                    if (bufferStr.EndsWith(\u0027\\r\u0027) || bufferStr.EndsWith(\u0027\\n\u0027))\r\n                    {\r\n                        // Process all complete lines\r\n                        foreach (var line in lines)\r\n                        {\r\n                            await ProcessScaleLineAsync(line.Trim());\r\n                        }\r\n                        buffer.Clear();\r\n                    }\r\n                    else if (lines.Length \u003E 1)\r\n                    {\r\n                        // Process all but the last incomplete line\r\n                        for (int i = 0; i \u003C lines.Length - 1; i\u002B\u002B)\r\n                        {\r\n                            await ProcessScaleLineAsync(lines[i].Trim());\r\n                        }\r\n                        // Keep the incomplete line in the buffer\r\n                        buffer.Clear();\r\n                        buffer.Append(lines[^1]);\r\n                    }\r\n                }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 180,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "79628495-7e05-4cd2-a6ef-b71196ce9a0e",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen != true)\r\n                {\r\n                    if (DateTime.UtcNow - _lastReconnectAttempt \u003E= ReconnectDelay)\r\n                    {\r\n                        _lastReconnectAttempt = DateTime.UtcNow;\r\n                        TryOpenPort();\r\n                    }\r\n\r\n                    await Task.Delay(1000, cancellationToken);\r\n                    continue;\r\n                }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen != true)\r\n                {\r\n                    if (DateTime.UtcNow - _lastReconnectAttempt \u003E= ReconnectDelay)\r\n                    {\r\n                        _lastReconnectAttempt = DateTime.UtcNow;\r\n                        TryOpenPort();\r\n                    }\r\n\r\n                    await Task.Delay(1000, cancellationToken);\r\n                    continue;\r\n                }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 168,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "a6bdcb1a-d372-4df6-9578-559ecf42df05",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen != true)\r\n                {\r\n                    if (DateTime.UtcNow - _lastReconnectAttempt \u003E= ReconnectDelay)\r\n                    {\r\n                        _lastReconnectAttempt = DateTime.UtcNow;\r\n                        TryOpenPort();\r\n                    }\r\n\r\n                    await Task.Delay(1000, cancellationToken);\r\n                    continue;\r\n                }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen != true)\r\n                {\r\n                    if (DateTime.UtcNow - _lastReconnectAttempt \u003E= ReconnectDelay)\r\n                    {\r\n                        _lastReconnectAttempt = DateTime.UtcNow;\r\n                        TryOpenPort();\r\n                    }\r\n\r\n                    await Task.Delay(1000, cancellationToken);\r\n                    continue;\r\n                }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 168,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "0e69b035-09a0-4abc-a679-3fbbe14207dd",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var data = testPort.ReadExisting();",
+              "protected": "M:System.IO.Ports.SerialPort.ReadExisting"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var data = testPort.ReadExisting();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.ReadExisting",
+            "label": "M:System.IO.Ports.SerialPort.ReadExisting",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 133,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "033b5cdf-4d93-4dfa-ada6-72560cab6b56",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "testPort.Open();",
+              "protected": "M:System.IO.Ports.SerialPort.Open"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "testPort.Open();",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.Open",
+            "label": "M:System.IO.Ports.SerialPort.Open",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 126,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "6bb6df16-1011-4bfb-b610-56d2405ff810",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.RtsEnable"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.RtsEnable",
+            "label": "P:System.IO.Ports.SerialPort.RtsEnable",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "9c8e2f85-f1cd-42d1-9be8-79411632377a",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.DtrEnable"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.DtrEnable",
+            "label": "P:System.IO.Ports.SerialPort.DtrEnable",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "0b83b4be-28f1-4222-afb2-8447b7c20090",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.WriteTimeout"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.WriteTimeout",
+            "label": "P:System.IO.Ports.SerialPort.WriteTimeout",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "354525a1-6543-4041-acdc-3055f1382134",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.ReadTimeout"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.ReadTimeout",
+            "label": "P:System.IO.Ports.SerialPort.ReadTimeout",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "1ba433f5-6c81-46c3-8161-1e6eac81517c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "257f30d7-c6bd-45c8-a183-e2731c2215b1",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "53360b2b-8b0b-4ccd-9826-3b5aa14b36de",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "F:System.IO.Ports.Handshake.None"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "F:System.IO.Ports.Handshake.None",
+            "label": "F:System.IO.Ports.Handshake.None",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "17ee3312-75f3-473e-ba71-c3ca5d9e18e6",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.Handshake",
+            "label": "T:System.IO.Ports.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "f27d7ade-fb07-4a2a-a878-73ef198314c1",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.Handshake"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.Handshake",
+            "label": "P:System.IO.Ports.SerialPort.Handshake",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "cc32a434-4543-4ace-a838-3fce9492a625",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "8f41e797-e85f-4a1b-b316-6e1f0210dde7",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.StopBits",
+            "label": "P:System.IO.Ports.SerialPort.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "7b437d9f-8d2f-4a73-82f4-7dee5464c812",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "54966f9a-71cb-4a7e-8e4d-d29b978cc50e",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.Parity",
+            "label": "P:System.IO.Ports.SerialPort.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "4bc89201-00ca-459d-a25c-766edd719219",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.DataBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.DataBits",
+            "label": "P:System.IO.Ports.SerialPort.DataBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "3b32c3a4-d416-4bfe-9057-b979510339a4",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "P:System.IO.Ports.SerialPort.BaudRate"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.BaudRate",
+            "label": "P:System.IO.Ports.SerialPort.BaudRate",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "df8fd688-4135-4087-a503-f04708e6bf30",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "a6276096-49c6-4068-8abb-d09017a3d53d",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+              "protected": "M:System.IO.Ports.SerialPort.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "using var testPort = new SerialPort(port)\r\n                {\r\n                    BaudRate = baudRate,\r\n                    DataBits = dataBits,\r\n                    Parity = parity,\r\n                    StopBits = stopBits,\r\n                    Handshake = Handshake.None,\r\n                    ReadTimeout = 250,\r\n                    WriteTimeout = 250,\r\n                    DtrEnable = true,\r\n                    RtsEnable = true\r\n                };",
+            "protectedSnippet": "M:System.IO.Ports.SerialPort.#ctor(System.String)",
+            "label": "M:System.IO.Ports.SerialPort.#ctor(System.String)",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 113,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "4fa56271-731b-4fe9-b00c-08158c6429b3",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 106,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "29d764e4-5fc1-4b12-a632-b169f960ad4b",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+              "protected": "P:System.IO.Ports.SerialPort.PortName"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.PortName",
+            "label": "P:System.IO.Ports.SerialPort.PortName",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 106,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f7f2bde2-c491-4710-b646-e53503cbac55",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 106,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "00be52d9-3a45-4e83-93af-37bf3f84ed28",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "if (_serialPort?.IsOpen == true \u0026\u0026 string.Equals(_serialPort.PortName, port, StringComparison.OrdinalIgnoreCase))\r\n            {\r\n                return port;\r\n            }",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 106,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "f2d25a55-14e2-4271-98ca-5e72965e8d85",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var timeout = timeoutPerPort ?? TimeSpan.FromSeconds(2);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var timeout = timeoutPerPort ?? TimeSpan.FromSeconds(2);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 102,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "3038a47e-e8b2-4f66-a8bf-e57bfb9dfd84",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 101,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "ce2dc33c-b5a1-434a-bf63-f89273033792",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 101,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "52e9ed5d-23ce-4e41-be99-578b7d794e74",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "F:System.IO.Ports.StopBits.One"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "F:System.IO.Ports.StopBits.One",
+            "label": "F:System.IO.Ports.StopBits.One",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 101,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "2aa30411-9447-4ca3-a64e-66e2d21b5c87",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+              "protected": "T:System.IO.Ports.StopBits"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var stopBits = _configuration.GetValue\u003CStopBits\u003E(\u0022Scale:StopBits\u0022, StopBits.One);",
+            "protectedSnippet": "T:System.IO.Ports.StopBits",
+            "label": "T:System.IO.Ports.StopBits",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 101,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "e781bfe3-5314-4fe2-91e7-6ab82a283b20",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 100,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "1bce42ef-8d0c-40c6-8074-2eab523fec91",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 100,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "5fb15030-dd01-4567-9752-c0cef801ebd4",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "F:System.IO.Ports.Parity.None"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "F:System.IO.Ports.Parity.None",
+            "label": "F:System.IO.Ports.Parity.None",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 100,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "115a7131-ce32-4349-99bf-326d47e396f2",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+              "protected": "T:System.IO.Ports.Parity"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "var parity = _configuration.GetValue\u003CParity\u003E(\u0022Scale:Parity\u0022, Parity.None);",
+            "protectedSnippet": "T:System.IO.Ports.Parity",
+            "label": "T:System.IO.Ports.Parity",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 100,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "718a2149-accc-47ce-bc14-b53c7355aa9d",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": ".IsOpen",
+              "protected": "P:System.IO.Ports.SerialPort.IsOpen"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": ".IsOpen",
+            "protectedSnippet": "P:System.IO.Ports.SerialPort.IsOpen",
+            "label": "P:System.IO.Ports.SerialPort.IsOpen",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 61,
+            "column": 43
+          }
+        },
+        {
+          "incidentId": "963f23a3-62a3-4d48-a77f-7eca80e9f583",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 61,
+            "column": 31
+          }
+        },
+        {
+          "incidentId": "e16f6423-c269-4046-8528-4be723f346a0",
+          "ruleId": "Api.0002",
+          "description": "API is available in package System.IO.Ports, 9.0.0-preview.6.24302.3. Add package reference to System.IO.Ports, 9.0.0-preview.6.24302.3",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_serialPort",
+              "protected": "T:System.IO.Ports.SerialPort"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Services\\ScaleReaderService.cs",
+            "snippet": "_serialPort",
+            "protectedSnippet": "T:System.IO.Ports.SerialPort",
+            "label": "T:System.IO.Ports.SerialPort",
+            "properties": {
+              "PackageId": "System.IO.Ports",
+              "PackageNewVersion": "9.0.0-preview.6.24302.3"
+            },
+            "line": 21,
+            "column": 24
+          }
+        },
+        {
+          "incidentId": "b433826d-2df5-4879-8b37-3220deb5998a",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var lines = await _scaleService.CaptureRawLinesAsync(count, TimeSpan.FromSeconds(10), HttpContext.RequestAborted);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Controllers\\ScaleController.cs",
+            "snippet": "var lines = await _scaleService.CaptureRawLinesAsync(count, TimeSpan.FromSeconds(10), HttpContext.RequestAborted);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 66,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "a3191645-b0a7-4fa1-b94b-44a0df83f627",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Exception diagnostics are suppressed when IExceptionHandler.TryHandleAsync returns true ",
+          "projectPath": "ScaleBlazor\\Server\\ScaleBlazor.Server.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseExceptionHandler(errorApp =\u003E\r\n{\r\n    errorApp.Run(async context =\u003E\r\n    {\r\n        var exception = context.Features.Get\u003CIExceptionHandlerFeature\u003E()?.Error;\r\n        var logger = context.RequestServices.GetRequiredService\u003CILogger\u003CProgram\u003E\u003E();\r\n\r\n        if (exception != null)\r\n        {\r\n            logger.LogError(exception, \u0022Unhandled server exception\u0022);\r\n        }\r\n\r\n        context.Response.StatusCode = StatusCodes.Status500InternalServerError;\r\n        await context.Response.WriteAsJsonAsync(new { error = \u0022An unexpected server error occurred.\u0022 });\r\n    });\r\n});",
+              "protected": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Server\\Program.cs",
+            "snippet": "app.UseExceptionHandler(errorApp =\u003E\r\n{\r\n    errorApp.Run(async context =\u003E\r\n    {\r\n        var exception = context.Features.Get\u003CIExceptionHandlerFeature\u003E()?.Error;\r\n        var logger = context.RequestServices.GetRequiredService\u003CILogger\u003CProgram\u003E\u003E();\r\n\r\n        if (exception != null)\r\n        {\r\n            logger.LogError(exception, \u0022Unhandled server exception\u0022);\r\n        }\r\n\r\n        context.Response.StatusCode = StatusCodes.Status500InternalServerError;\r\n        await context.Response.WriteAsJsonAsync(new { error = \u0022An unexpected server error occurred.\u0022 });\r\n    });\r\n});",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "label": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/exception-handler-diagnostics-suppressed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "ScaleBlazor\\Shared\\ScaleBlazor.Shared.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "ScaleBlazor.Shared",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net7.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 9,
+        "numberOfCodeFiles": 9,
+        "linesTotal": 89,
+        "linesOfCode": 89,
+        "totalApiScanned": 192,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "b16fba97-bce1-44df-a2bf-432837024d3b",
+          "ruleId": "Project.0002",
+          "projectPath": "ScaleBlazor\\Shared\\ScaleBlazor.Shared.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net7.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net7.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "ScaleBlazor\\Shared\\ScaleBlazor.Shared.csproj",
+            "snippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net7.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net7.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "NuGet package upgrade is recommended for selected target framework.\n\nStandard .NET packages are recommended to have versions matching version of .NET that project targets.\n\nSome other packages also are known to work better for selected target frameworks.",
+      "label": "NuGet package upgrade is recommended",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "API has a behavioral change in selected .NET version: code and binaries may behave differently at runtime without needing recompilation, but the new behavior might be undesirable and require updates.",
+      "label": "Behavioral change in selected .NET version",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "API is source incompatible for selected .NET version: requires code changes to compile successfully when targeting a new version, such as removing obsolete APIs or changing method signatures.",
+      "label": "Source incompatible for selected .NET version",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
