@@ -8,4 +8,5 @@ public class AppSettings
     public double AutoCaptureThresholdPercent { get; set; } = 1.0;
     public bool DebugMode { get; set; } = false;
     public string? ScalePortName { get; set; }
+    public bool ShowErrorPopups { get; set; } = true;
 }

@@ -524,11 +524,21 @@ public class ScaleReaderService : IDisposable
 
         var currentWeight = lastReadings[^1];
         var diff = currentWeight >= avgLast ? currentWeight - avgLast : avgLast - currentWeight;
-        var percentDiff = diff / avgLast * 100.0;
+        var percentDiff = 0.0;
+
+        if (diff > 0 && avgLast > 0)
+        {
+            percentDiff = diff / avgLast * 100.0;
+        }
+
         var minWeight = lastReadings.Min();
         var maxWeight = lastReadings.Max();
+        var rangePercent = 0.0;
 
-        var rangePercent = (maxWeight - minWeight) / avgLast * 100.0;
+        if ((maxWeight - minWeight) > 0 && avgLast > 0)
+        {
+            rangePercent = (maxWeight - minWeight) / avgLast * 100.0;
+        }
 
         if (percentDiff > _autoCaptureThresholdPercent || rangePercent > _autoCaptureThresholdPercent)
         {

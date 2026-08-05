@@ -24,7 +24,19 @@
     }
 
     .cards-container > .card {
+        height: min(450px, 56vh);
         max-height: min(450px, 56vh);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .readings-card .card-body,
+    .cards-container > .card .card-body {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     .card-header {
@@ -78,6 +90,12 @@
         margin-bottom: 6px;
     }
 
+    .pallet-summary {
+        gap: 8px;
+        margin-bottom: 8px;
+        flex-shrink: 0;
+    }
+
     .pallet-id {
         font-size: 1.2rem;
     }
@@ -91,9 +109,16 @@
         font-size: 0.82rem;
     }
 
+    .pallets-list {
+        padding-bottom: 4px;
+    }
+
     .pallets-list,
     .readings-list {
-        max-height: 260px;
+        max-height: none;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
     }
 
     .timeline-card {
@@ -575,6 +600,7 @@ body {
     min-height: 0;
     display: flex;
     flex-direction: column;
+    padding: 8px 8px 0;
 }
 
 .card-body .mud-chart,
@@ -606,6 +632,8 @@ canvas {
     min-height: 0;
     height: 100% !important;
     flex: 1;
+    max-height: none !important;
+    margin-bottom: 0;
 }
 
 @media (max-width: 1100px) and (max-height: 650px) {
@@ -986,6 +1014,10 @@ h1:focus {
         height: min(360px, 45vh);
     }
 
+    .cards-container > .readings-card {
+        height: min(440px, 55vh);
+    }
+
     .card-header {
         padding: 8px 10px;
         font-size: 0.9rem;
@@ -1027,6 +1059,10 @@ h1:focus {
     .reading-item {
         padding: 6px;
         font-size: 0.85rem;
+    }
+
+    .readings-list {
+        max-height: none;
     }
 
     .pallet-info {
@@ -1307,11 +1343,80 @@ h1:focus {
     color: #6c757d;
     font-size: 0.85rem;
     font-style: italic;
+    display: block;
+    margin-top: 4px;
+}
+
+.setting-item.action-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.setting-item.action-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.setting-item.toggle-item {
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.input-with-button {
+    display: flex;
+    gap: 10px;
+}
+
+.input-with-button .setting-input {
+    flex: 1;
+}
+
+.input-with-button .auto-detect-btn,
+.input-with-button .purge-btn {
+    width: auto;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+
+.btn-danger:disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.settings-actions-card {
+    background-color: #f8f9fa;
+    border: 2px solid #e9ecef;
+}
+
+.settings-actions-card .btn-primary {
+    font-size: 1.2rem;
+    padding: 15px;
 }
 
 .setting-checkbox {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     cursor: pointer;
     font-weight: 600;
@@ -1319,10 +1424,12 @@ h1:focus {
 }
 
 .setting-checkbox input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
+    margin-top: 2px;
 }
+
 
 .input-with-unit {
     display: flex;
@@ -1733,6 +1840,212 @@ h1:focus {
     .pallet-stats-table th,
     .pallet-stats-table td {
         padding: 8px;
+    }
+}
+
+/* Touch, keyboard, and empty-state polish */
+button,
+select,
+input {
+    touch-action: manipulation;
+}
+
+button,
+.setting-checkbox {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+.setting-checkbox:focus-within {
+    outline: 3px solid #ffbf47;
+    outline-offset: 2px;
+}
+
+.empty-state {
+    flex: 1;
+    min-height: 120px;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    color: #667085;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: center;
+    background: linear-gradient(145deg, #fafbff, #f4f6fb);
+    border: 1px dashed #cbd3e1;
+    border-radius: 10px;
+}
+
+.timeline-empty-state {
+    min-height: 0;
+}
+
+.chart-fill {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+@media (pointer: coarse) {
+    button,
+    select,
+    input:not([type="checkbox"]) {
+        min-height: 44px;
+    }
+
+    .setting-checkbox {
+        min-height: 44px;
+        align-items: center;
+    }
+
+    .btn-icon-inline:hover,
+    .tab-btn:hover,
+    .card:hover {
+        transform: none;
+    }
+}
+
+/* Landscape touchscreen: exact production target plus nearby 16:10 panels. */
+@media (min-width: 1101px) and (max-width: 1366px) and (min-height: 700px) and (max-height: 850px) {
+    body {
+        padding: 10px;
+    }
+
+    .dashboard-page {
+        height: calc(100dvh - 20px);
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .dashboard-page .cards-container {
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-page .cards-container > .card {
+        height: min(440px, 55vh);
+        max-height: min(440px, 55vh);
+    }
+
+    .dashboard-page .timeline-card {
+        min-height: 0;
+    }
+
+    .btn-icon-inline.btn-icon-inline-sm,
+    .btn-icon-inline.btn-icon-inline-xs,
+    .card-header .card-tab,
+    .readings-card select,
+    .timeline-range-select,
+    .view-selector,
+    .date-range-select,
+    .tab-btn,
+    .reports-back {
+        min-height: 44px;
+    }
+
+    .btn-icon-inline.btn-icon-inline-sm {
+        padding: 8px 12px;
+    }
+
+    .btn-icon-inline.btn-icon-inline-xs {
+        min-width: 70px;
+        padding: 6px 8px;
+        border-radius: 7px;
+    }
+
+    .btn-icon-inline.btn-icon-inline-sm .icon-text,
+    .btn-icon-inline.btn-icon-inline-xs .icon-text {
+        font-size: 0.9rem;
+    }
+
+    .card-header .card-tab {
+        padding: 7px 11px;
+        font-size: 0.78rem;
+    }
+
+    .reading-item {
+        min-height: 52px;
+        padding: 4px 6px;
+    }
+
+    .pallet-summary .btn-secondary {
+        min-height: 44px;
+    }
+
+    .settings-page {
+        width: 100%;
+        max-width: 1160px;
+    }
+
+    .settings-header {
+        margin-bottom: 4px;
+    }
+
+    .settings-content {
+        display: block;
+        column-count: 2;
+        column-gap: 14px;
+    }
+
+    .settings-content > .card {
+        display: inline-block;
+        width: 100%;
+        max-height: none;
+        margin: 0 0 10px;
+        break-inside: avoid;
+        vertical-align: top;
+    }
+
+    .settings-header .btn-primary,
+    .settings-header .btn-back,
+    .settings-content button,
+    .settings-content input,
+    .settings-content select {
+        min-height: 44px;
+    }
+
+    .settings-header .btn-back {
+        white-space: nowrap;
+    }
+
+    .settings-content input[type="checkbox"] {
+        min-height: 24px;
+    }
+
+    .settings-content > .card:nth-child(2) .card-body {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .settings-content > .card:nth-child(2) .setting-item {
+        margin: 0;
+    }
+
+    .settings-content > .card:nth-child(2) .setting-item:first-child,
+    .settings-content > .card:nth-child(2) .action-item {
+        grid-column: 1 / -1;
+    }
+
+    .settings-content > .card:nth-child(2) .toggle-item {
+        padding: 8px;
+    }
+
+    .settings-content > .card:nth-child(2) .action-item {
+        padding-bottom: 8px;
+    }
+
+    .reports-page {
+        width: 100%;
+    }
+
+    .reports-top-row {
+        min-height: 44px;
     }
 }
 

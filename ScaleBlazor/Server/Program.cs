@@ -122,7 +122,8 @@ using (var scope = app.Services.CreateScope())
             AutoCaptureEnabled = false,
             AutoCaptureThresholdPercent = 1.0,
             DebugMode = false,
-            ScalePortName = app.Configuration["Scale:PortName"]
+            ScalePortName = app.Configuration["Scale:PortName"],
+            ShowErrorPopups = true
         });
         db.SaveChanges();
     }
@@ -141,6 +142,7 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
 
     var hasScalePortName = false;
     var hasDebugMode = false;
+    var hasShowErrorPopups = false;
     using (var reader = command.ExecuteReader())
     {
         while (reader.Read())
@@ -155,6 +157,11 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
             {
                 hasDebugMode = true;
             }
+
+            if (string.Equals(columnName, "ShowErrorPopups", StringComparison.OrdinalIgnoreCase))
+            {
+                hasShowErrorPopups = true;
+            }
         }
     }
 
@@ -167,6 +174,12 @@ static void ApplyPendingSchemaUpdates(ScaleDbContext db)
     if (!hasDebugMode)
     {
         command.CommandText = "ALTER TABLE Settings ADD COLUMN DebugMode INTEGER NOT NULL DEFAULT 0";
+        command.ExecuteNonQuery();
+    }
+
+    if (!hasShowErrorPopups)
+    {
+        command.CommandText = "ALTER TABLE Settings ADD COLUMN ShowErrorPopups INTEGER NOT NULL DEFAULT 1";
         command.ExecuteNonQuery();
     }
 }

@@ -23,13 +23,14 @@ public class ScaleController : ControllerBase
     }
 
     [HttpGet("current")]
-    public ActionResult<ScaleReading> GetCurrentReading()
+    public ActionResult<ScaleReading?> GetCurrentReading()
     {
         var scaleEnabled = _configuration.GetValue<bool>("Scale:Enabled", false);
+        var useLiveScaleReading = scaleEnabled && _scaleService.IsConnected;
 
         var reading = new ScaleReading
         {
-            Weight = scaleEnabled && _scaleService.IsConnected 
+            Weight = useLiveScaleReading
                 ? _scaleService.CurrentWeight 
                 : GenerateSimulatedWeight(),
             Timestamp = DateTime.Now

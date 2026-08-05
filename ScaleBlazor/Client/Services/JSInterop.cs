@@ -31,6 +31,11 @@ public class JSInterop
         await _jsRuntime.InvokeVoidAsync("JSInterop.exitKiosk");
     }
 
+    public async Task Alert(string message)
+    {
+        await _jsRuntime.InvokeVoidAsync("alert", message);
+    }
+
     public async Task UpdateDailyChart<T>(IEnumerable<T> data)
     {
         await _jsRuntime.InvokeVoidAsync("JSInterop.updateDailyChart", data);

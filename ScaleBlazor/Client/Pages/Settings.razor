@@ -5,23 +5,25 @@
 @inject NavigationManager Navigation
 @inject JSInterop JSInterop
 
-<div class="scale-system">
+<div class="scale-system settings-shell">
     <div class="settings-page">
         <div class="settings-header">
             <h1 class="title">Settings</h1>
-            <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
-                @if (isSaving)
-                {
-                    <span>Saving...</span>
-                }
-                else
-                {
-                    <span>Save Settings</span>
-                }
-            </button>
-            <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
-                <span>← Back</span>
-            </button>
+            <div class="header-buttons">
+                <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
+                    @if (isSaving)
+                    {
+                        <span>Saving...</span>
+                    }
+                    else
+                    {
+                        <span>Save Settings</span>
+                    }
+                </button>
+                <button class="btn-back" @onclick="GoBack" title="Back to Dashboard">
+                    <span>← Back</span>
+                </button>
+            </div>
         </div>
 
         @if (saveMessage != null)
@@ -45,13 +47,14 @@
                     </div>
                     <div class="card-body">
                         <div class="setting-item">
-                            <label class="setting-label">Readings Per Pallet</label>
-                            <input type="number" 
+                            <label class="setting-label" for="readings-per-pallet">Readings Per Pallet
+                                <small class="setting-help">Number of weight readings required per pallet</small>
+                            </label>
+                            <input id="readings-per-pallet" type="number"
                                    class="setting-input" 
                                    @bind="settings.ReadingsPerPallet" 
                                    min="1" 
                                    max="100" />
-                            <small class="setting-help">Number of weight readings required per pallet</small>
                         </div>
                     </div>
                 </div>
@@ -62,20 +65,25 @@
                         <span>Auto-Capture Configuration</span>
                     </div>
                     <div class="card-body">
-                        <div class="setting-item">
+                        <div class="setting-item toggle-item">
                             <label class="setting-checkbox">
                                 <input type="checkbox" @bind="settings.AutoCaptureEnabled" />
-                                <span>Enable Auto-Capture</span>
+                                <span>Enable Auto-Capture
+                                    <small class="setting-help">Automatically capture weight when readings are stable</small>
+                                </span>
                             </label>
-                            <small class="setting-help">Automatically capture weight when readings are stable</small>
                         </div>
 
                         @if (settings.AutoCaptureEnabled)
                         {
-                            <div class="setting-item">
-                                <label class="setting-label">Stability Threshold (%)</label>
+                            <div class="setting-item action-item">
+                                <label class="setting-label" for="stability-threshold">Stability Threshold (%)
+                                    <small class="setting-help">
+                                        Auto-capture when current weight is within this percentage of the last 10 readings
+                                    </small>
+                                </label>
                                 <div class="input-with-unit">
-                                    <input type="number" 
+                                    <input id="stability-threshold" type="number"
                                            class="setting-input" 
                                            @bind="settings.AutoCaptureThresholdPercent" 
                                            min="0.1" 
@@ -83,18 +91,25 @@
                                            step="0.1" />
                                     <span class="unit">%</span>
                                 </div>
-                                <small class="setting-help">
-                                    Auto-capture when current weight is within this percentage of the last 10 readings
-                                </small>
                             </div>
                         }
 
-                        <div class="setting-item">
+                        <div class="setting-item toggle-item">
                             <label class="setting-checkbox">
                                 <input type="checkbox" @bind="settings.DebugMode" />
-                                <span>Enable Debug Mode</span>
+                                <span>Enable Debug Mode
+                                    <small class="setting-help">Show live auto-capture gate values next to the dashboard live reading.</small>
+                                </span>
                             </label>
-                            <small class="setting-help">Show live auto-capture gate values next to the dashboard live reading.</small>
+                        </div>
+
+                        <div class="setting-item toggle-item">
+                            <label class="setting-checkbox">
+                                <input type="checkbox" @bind="settings.ShowErrorPopups" />
+                                <span>Enable Error Popups
+                                    <small class="setting-help">Displays errors using browser alert popups temporarily.</small>
+                                </span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -105,25 +120,27 @@
                         <span>Scale Connection</span>
                     </div>
                     <div class="card-body">
-                        <div class="setting-item">
-                            <label class="setting-label">COM Port</label>
-                            <input type="text"
-                                   class="setting-input"
-                                   @bind="settings.ScalePortName"
-                                   placeholder="COM3" />
-                            <small class="setting-help">Set the port or auto-detect the scale connection.</small>
+                        <div class="setting-item action-item">
+                            <label class="setting-label" for="scale-port">COM Port
+                                <small class="setting-help">Set the port or auto-detect the scale connection.</small>
+                            </label>
+                            <div class="input-with-button">
+                                <input id="scale-port" type="text"
+                                       class="setting-input"
+                                       @bind="settings.ScalePortName"
+                                       placeholder="COM3" />
+                                <button class="btn-secondary auto-detect-btn" @onclick="AutoDetectPort" disabled="@isDetecting">
+                                    @if (isDetecting)
+                                    {
+                                        <span>Detecting...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Auto-Detect Port</span>
+                                    }
+                                </button>
+                            </div>
                         </div>
-
-                        <button class="btn-secondary" @onclick="AutoDetectPort" disabled="@isDetecting">
-                            @if (isDetecting)
-                            {
-                                <span>Detecting...</span>
-                            }
-                            else
-                            {
-                                <span>Auto-Detect Port</span>
-                            }
-                        </button>
 
                         @if (detectMessage != null)
                         {
@@ -166,26 +183,28 @@
                         <span>Data Retention</span>
                     </div>
                     <div class="card-body">
-                        <div class="setting-item">
-                            <label class="setting-label">Delete data older than</label>
-                            <input type="date"
-                                   class="setting-input"
-                                   @bind-value="purgeBefore"
-                                   @bind-value:format="yyyy-MM-dd"
-                                   max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                            <small class="setting-help">Deletes readings and pallets created before this date.</small>
+                        <div class="setting-item action-item">
+                            <label class="setting-label" for="purge-before">Delete data older than
+                                <small class="setting-help">Deletes readings and pallets created before this date.</small>
+                            </label>
+                            <div class="input-with-button">
+                                <input id="purge-before" type="date"
+                                       class="setting-input"
+                                       @bind-value="purgeBefore"
+                                       @bind-value:format="yyyy-MM-dd"
+                                       max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <button class="btn-danger purge-btn" @onclick="PurgeData" disabled="@isPurging">
+                                    @if (isPurging)
+                                    {
+                                        <span>Deleting...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Delete Old Data</span>
+                                    }
+                                </button>
+                            </div>
                         </div>
-
-                        <button class="btn-secondary" @onclick="PurgeData" disabled="@isPurging">
-                            @if (isPurging)
-                            {
-                                <span>Deleting...</span>
-                            }
-                            else
-                            {
-                                <span>Delete Old Data</span>
-                            }
-                        </button>
 
                         @if (purgeMessage != null)
                         {
@@ -240,6 +259,25 @@
                         {
                             <pre class="setting-help">@string.Join("\n", rawReadings)</pre>
                         }
+                    </div>
+                </div>
+
+                <div class="card settings-actions-card">
+                    <div class="card-header">
+                        <span class="icon">Settings</span>
+                        <span>Actions</span>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn-primary" @onclick="SaveSettings" disabled="@isSaving">
+                            @if (isSaving)
+                            {
+                                <span>Saving...</span>
+                            }
+                            else
+                            {
+                                <span>Save Settings</span>
+                            }
+                        </button>
                     </div>
                 </div>
             </div>

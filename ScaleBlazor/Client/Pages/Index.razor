@@ -7,7 +7,7 @@
 @inject NavigationManager Navigation
 @implements IDisposable
 
-<div class="scale-system">
+<div class="scale-system dashboard-page">
     <div class="cards-container">
         <div class="card @(flashSuccess ? "flash-success" : "")">
             <div class="card-header">
@@ -23,7 +23,7 @@
             <div class="card-body">
                 @if (scaleStatus != null)
                 {
-                    <div class="scale-status @(scaleStatus.IsConnected ? "connected" : "disconnected")">
+                    <div class="scale-status @(scaleStatus.IsConnected ? "connected" : "disconnected")" role="status" aria-live="polite">
                         <span class="status-dot"></span>
                         <span class="status-text">
                             @if (scaleStatus.IsEnabled)
@@ -37,7 +37,7 @@
                         </span>
                     </div>
                 }
-                <div class="live-reading">@currentWeight.ToString("F2")</div>
+                <div class="live-reading" aria-live="polite" aria-atomic="true">@currentWeight.ToString("F2")</div>
                 <div class="unit">Lbs</div>
                 <button class="btn-primary" @onclick="CaptureReading" disabled="@isCapturing">
                     @if (isCapturing)
@@ -88,7 +88,7 @@
                         <div class="reading-item">
                             <span class="weight">@reading.Weight.ToString("F2") lbs</span>
                             <span class="time">@reading.Timestamp.ToString("h:mm:ss tt")</span>
-                            <button class="btn-icon-inline btn-icon-inline-xs" @onclick="@(() => DeleteReading(reading.Id))" title="Delete Reading">
+                            <button class="btn-icon-inline btn-icon-inline-xs" @onclick="@(() => DeleteReading(reading.Id))" title="Delete Reading" aria-label="@($"Delete {reading.Weight:F2} pound reading from {reading.Timestamp:h:mm:ss tt}")">
                                 <span class="icon-text">Delete</span>
                             </button>
                         </div>
@@ -139,22 +139,36 @@
             <div class="card-body">
                 @if (dailyAverageView == "list")
                 {
-                    <div class="pallets-list">
-                        @foreach (var day in dailyAverages)
-                        {
-                            <div class="pallet-item">
-                                <span class="pallet-name">@day.Date.ToString("MMM dd")</span>
-                                <span class="pallet-readings metric-small">@day.PalletCount pallets</span>
-                                <span class="pallet-weight @(day.Date.Date == LatestDailyAverage?.Date.Date ? "highlight-value" : "")">@day.AverageWeight.ToString("F2") lbs</span>
-                            </div>
-                        }
-                    </div>
+                    @if (dailyAverages.Count == 0)
+                    {
+                        <div class="empty-state">No completed pallets in the last 7 days.</div>
+                    }
+                    else
+                    {
+                        <div class="pallets-list">
+                            @foreach (var day in dailyAverages)
+                            {
+                                <div class="pallet-item">
+                                    <span class="pallet-name">@day.Date.ToString("MMM dd")</span>
+                                    <span class="pallet-readings metric-small">@day.PalletCount pallets</span>
+                                    <span class="pallet-weight @(day.Date.Date == LatestDailyAverage?.Date.Date ? "highlight-value" : "")">@day.AverageWeight.ToString("F2") lbs</span>
+                                </div>
+                            }
+                        </div>
+                    }
                 }
                 else
                 {
-                    <div style="position: relative; width: 100%; height: 100%;">
-                        <canvas id="dailyChart"></canvas>
-                    </div>
+                    @if (dailyAverages.Count == 0)
+                    {
+                        <div class="empty-state">No completed pallets to graph yet.</div>
+                    }
+                    else
+                    {
+                        <div class="chart-fill">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -177,8 +191,14 @@
             </div>
         </div>
         <div class="card-body">
-   
-            <canvas id="timelineChart"></canvas>
+            @if ((timelineRangeDays == 1 && timelineReadings.Count == 0) || (timelineRangeDays > 1 && timelineAverages.Count == 0))
+            {
+                <div class="empty-state timeline-empty-state">No readings are available for this time range.</div>
+            }
+            else
+            {
+                <canvas id="timelineChart"></canvas>
+            }
         </div>
     </div>
 </div>
@@ -209,6 +229,8 @@
     private bool isCapturing;
     private string? captureMessage;
     private bool captureSuccess;
+    private AppSettings? appSettings;
+
     private Pallet? LastCompletedPallet => pallets
         .Where(pallet => pallet.IsCompleted)
         .OrderByDescending(pallet => pallet.CreatedAt)
@@ -298,11 +320,11 @@
     {
         try
         {
-            var settings = await Http.GetFromJsonAsync<AppSettings>("api/settings");
-            if (settings != null)
+            appSettings = await Http.GetFromJsonAsync<AppSettings>("api/settings");
+            if (appSettings != null)
             {
-                readingsPerPallet = settings.ReadingsPerPallet;
-                debugMode = settings.DebugMode;
+                readingsPerPallet = appSettings.ReadingsPerPallet;
+                debugMode = appSettings.DebugMode;
             }
         }
         catch (Exception ex)
@@ -417,7 +439,7 @@
 
         try
         {
-            var reading = await Http.GetFromJsonAsync<ScaleReading>(FreshUrl("api/scale/current"));
+            var reading = await Http.GetFromJsonAsync<ScaleReading?>(FreshUrl("api/scale/current"));
             if (reading != null)
             {
                 currentWeight = reading.Weight;
@@ -427,13 +449,13 @@
                 {
                     debugState = await Http.GetFromJsonAsync<ScaleDebugState>("api/scale/debug-state");
                 }
+            }
 
-                var previousReadingId = lastReadingId;
-                await CheckForNewReading();
-                if (lastReadingId == previousReadingId)
-                {
-                    await InvokeAsync(StateHasChanged);
-                }
+            var previousReadingId = lastReadingId;
+            await CheckForNewReading();
+            if (lastReadingId == previousReadingId)
+            {
+                await InvokeAsync(StateHasChanged);
             }
         }
         catch (Exception ex)
@@ -443,6 +465,14 @@
         finally
         {
             updateLock.Release();
+        }
+    }
+
+    private void ShowErrorPopup(string message)
+    {
+        if (appSettings?.ShowErrorPopups == true)
+        {
+            _ = JSInterop.Alert(message);
         }
     }
 
@@ -475,6 +505,7 @@
                 var detail = string.IsNullOrWhiteSpace(errorBody) ? response.ReasonPhrase : errorBody;
                 captureMessage = $"Failed to capture reading ({(int)response.StatusCode}): {detail}";
                 captureSuccess = false;
+                ShowErrorPopup(captureMessage);
             }
         }
         catch (Exception ex)
@@ -482,6 +513,7 @@
             Console.WriteLine($"Error capturing reading: {ex.Message}");
             captureMessage = $"Error capturing reading: {ex.Message}";
             captureSuccess = false;
+            ShowErrorPopup(captureMessage);
         }
         finally
         {

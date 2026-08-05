@@ -6,7 +6,7 @@
 @inject IJSRuntime JSRuntime
 @inject JSInterop ChartInterop
 
-<div class="scale-system">
+<div class="scale-system reports-shell">
     <div class="reports-page">
         <div class="reports-top-row">
             <h1 class="title">Analytics & Reports</h1>
@@ -25,7 +25,7 @@
                 </button>
             </div>
             <div class="tabs-filter">
-                <select class="date-range-select" @bind="activePreset" @bind:after="OnPresetChanged">
+                <select class="date-range-select" @bind="activePreset" @bind:after="OnPresetChanged" aria-label="Report date range">
                     <option value="today">Today</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
@@ -67,7 +67,7 @@
                             <span class="icon">Average</span>
                             <span>Average Weight Trends</span>
                             <div class="header-buttons">
-                                <select class="view-selector" @bind="averageViewType" @bind:after="UpdateOverviewChart">
+                                <select class="view-selector" @bind="averageViewType" @bind:after="UpdateOverviewChart" aria-label="Average grouping">
                                     <option value="daily">Daily Average</option>
                                     <option value="weekly">Weekly Average</option>
                                 </select>
@@ -165,17 +165,17 @@
                             <div class="export-form">
                                 <div class="form-group">
                                     <label>Start Date</label>
-                                    <input type="date" class="form-input" @bind="startDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <input type="date" class="form-input" @bind="startDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" aria-label="Export start date" />
                                 </div>
 
                                 <div class="form-group">
                                     <label>End Date</label>
-                                    <input type="date" class="form-input" @bind="endDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <input type="date" class="form-input" @bind="endDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" aria-label="Export end date" />
                                 </div>
 
                                 <div class="form-group">
                                     <label>Export Type</label>
-                                    <select class="form-input" @bind="exportType">
+                                    <select class="form-input" @bind="exportType" aria-label="Export type">
                                         <option value="readings">Scale Readings</option>
                                         <option value="pallets">Pallet Data</option>
                                         <option value="all">All Data</option>
